@@ -1,18 +1,18 @@
 import sys
 import pygame
 from pygame.locals import *
+from game import*
+
 """
 This is the main file, where with game loop
 """
 
-gameOver = False
 
+game = Game()
 
 if __name__ == "__main__":
+    while(not game.gameOver):
+        game.checkEvents()
 
-    while(not gameOver):
-        print("Welcome to my game")
-        print("Press 1 to exit")
-        a = int(input())
-        if a == 1:
-            gameOver = True
+
+

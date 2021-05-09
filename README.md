@@ -1,4 +1,4 @@
-# Battleship-
+# Battleship
 
 Okręty 
 

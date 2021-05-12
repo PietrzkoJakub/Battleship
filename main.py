@@ -51,7 +51,7 @@ buttonHorizontalSize = 50
 def mapButtonsInit():
     for i in range(100,600,50):
         for j in range(100,600,50):
-            button = Button(bg = "blue")
+            button = Button(bg = "yellow")
             button.place(x=i, y=j, height=50, width=50)
 
     for i in range(650, 1150, 50):

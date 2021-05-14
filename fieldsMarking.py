@@ -1,6 +1,8 @@
 from tkinter import *
 
-alphabet = [chr(i) for i in range(ord('A'),ord('J')+1)]
+def alphabetInit():
+    alphabet = [chr(i) for i in range(ord('A'),ord('J')+1)]
+    return alphabet
 
 def fieldFillWithLetters(root, letters, startLocation, endLocation):
     j = 0
@@ -15,7 +17,8 @@ def fieldFillWithNumbers(root,xCordinate):
         j += 1
 
 
-def fieldMarks(root, letters):
+def fieldMarks(root):
+    letters = alphabetInit()
     fieldFillWithLetters(root, letters, 100, 600)
     fieldFillWithLetters(root, letters, 650, 1150)
     fieldFillWithNumbers(root, 75)

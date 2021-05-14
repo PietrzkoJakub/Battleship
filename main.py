@@ -30,7 +30,7 @@ def rootInit():
 
 def mainWindowInit():
     root = rootInit()
-    fieldMarks(root,alphabet)
+    fieldMarks(root)
     playerButtons = playerButtonsCreate(root, "green", 100, 600)
     enemyButtons = enemyButtonsCreate(root, "yellow", 650, 1150)
     print(playerGameTable)
@@ -60,6 +60,7 @@ def playerButtonsCreate(root, color, start, end):
 
 
 def setShip(button:Button,buttons:dict,orientation,s):
+    col = False
     if(s == 0):
         print("Pick up the ship!!")
     else:
@@ -67,28 +68,67 @@ def setShip(button:Button,buttons:dict,orientation,s):
         x= button.winfo_x()
         y = button.winfo_y()
         shipSize = s * 50
+
         if(orientation=="v"):
             if(x<=600-shipSize):
+                col = colissionChecker(playerGameTable,shipSize,x,y,orientation)
+                fieldBlocker(playerGameTable,shipSize,x,y,orientation)
                 for i in range(0,shipSize,50):
-                    if(playerGameTable[(x+i,y)]==1):
-                        print("Cant place ship here, ships collision")
-                        button.configure(activebackground="red")
-                        continue
+                    if(not col):
+                        buttons[(x + i, y)].configure(bg="blue")
+                        playerGameTable[(x + i, y)] = 1
                     else:
-                        buttons[(x+i,y)].configure(bg = "blue")
-                        playerGameTable[(x+i,y)] = 1
+                        button.configure(activebackground="red")
+                        print("Can't place ship here, ship collision")
+                        break
             else:
                 button.configure(activebackground = "red")
                 print("Can't place ship here, game map out of range")
         if (orientation == "h"):
             if (y <= 600-shipSize and x<= 600):
+                col = colissionChecker(playerGameTable, shipSize, x, y, orientation)
+                fieldBlocker(playerGameTable, shipSize, x, y, orientation)
                 for i in range(0,shipSize,50):
-                    buttons[(x,y+i)].configure(bg = "blue")
-                    playerGameTable[(x, y+i)] = 1
+                    if (not col):
+                        buttons[(x, y+i)].configure(bg="blue")
+                        playerGameTable[(x, y+i)] = 1
+                    else:
+                        button.configure(activebackground="red")
+                        print("Can't place ship here, ship collision")
+                        break
             else:
-                button.configure(activeforeground="red")
-                print("Can't place ship here")
+                button.configure(activebackground="red")
+                print("Can't place ship here, game map out of range")
 
+def colissionChecker(playerGameTable,shipSize,x,y,orient):
+    colission = False
+    if(orient=="v"):
+        for i in range(0, shipSize, 50):
+            if(playerGameTable[(x + i, y)]!=0):
+                colission = True
+        return colission
+    elif(orient=="h"):
+        for i in range(0, shipSize, 50):
+            if(playerGameTable[(x, y+i)]!=0):
+                colission = True
+        return colission
+
+
+
+def fieldBlocker(playerGameTable,shipSize,x,y,o):
+    if(shipSize==50):
+        playerGameTable[(x + 50, y)] = "X"
+        if(x!=100):
+            playerGameTable[(x - 50, y)] = "X"
+    elif(x+shipSize<600 and x>100  and y>100 and y+shipSize<650): #jezeli statek nie lezy przy zadnej z krawedzi
+        if(o == "v"):
+            for i in range(0,shipSize+100,50): #dla wertykalnch
+                playerGameTable[(x -50 + i, y-50)] = "X" #nad
+                playerGameTable[(x - 50 + i, y + 50)] = "X" #pod
+        elif(o=="h"):
+            for i in range(0,shipSize+100,50): #dla horyzontalnych
+                playerGameTable[(x+50, y-50+i)] = "X" #za
+                playerGameTable[(x - 50, y - 50+i)] = "X" #przed
 
 def ships():
     fourmast = Button(text="FOURMAST", bg = "purple")

@@ -10,6 +10,7 @@ widthRes = 1920
 alphabet = [chr(i) for i in range(ord('A'),ord('J')+1)]
 
 def whichShip(shipSize):
+   global ship
    ship = shipSize
 
 def rootInit():
@@ -23,42 +24,54 @@ def rootInit():
 def mainWindowInit():
     root = rootInit()
     fieldMarks(root,alphabet)
-    playerButtons = buttonCreate(root, "green", 100, 600)
-    enemyButtons = buttonCreate(root, "yellow", 650, 1150)
+    playerButtons = playerButtonsCreate(root, "green", 100, 600)
+    enemyButtons = enemyButtonsCreate(root, "yellow", 650, 1150)
     mb.MainButtons()
     ships()
     root.mainloop()
 
-
-def buttonCreate(root,color,start,end):
+def enemyButtonsCreate(root, color, start, end):
     buttons = {}
     for i in range(start, end, 50):
         for j in range(100, 600, 50):
             button = Button(root, bg=color)
             button.place(x=i, y=j, height=50, width=50)
             buttons[(i, j)] = button
-            button.bind('<Button-1>', lambda event, b=button: setShip(b,buttons,"v",3))
-            button.bind('<Button-3>', lambda event, b=button: setShip(b, buttons,"h",3))
+    return buttons
+
+
+def playerButtonsCreate(root, color, start, end):
+    buttons = {}
+    for i in range(start, end, 50):
+        for j in range(100, 600, 50):
+            button = Button(root, bg=color)
+            button.place(x=i, y=j, height=50, width=50)
+            buttons[(i, j)] = button
+            button.bind('<Button-1>', lambda event, b=button: setShip(b,buttons,"v",ship))
+            button.bind('<Button-3>', lambda event, b=button: setShip(b, buttons,"h",ship))
     return buttons
 
 def setShip(button:Button,buttons:dict,orientation,s):
-    x= button.winfo_x()
-    y = button.winfo_y()
-    shipSize = s * 50
-    if(orientation=="v"):
-        if(x<=600-shipSize):
-            for i in range(0,shipSize,50):
-                buttons[(x+i,y)].configure(bg = "blue")
-        else:
-            button.configure(activebackground = "red")
-            print("Can't place ship here")
-    if (orientation == "h"):
-        if (y <= 600-shipSize and x<= 600):
-            for i in range(0,shipSize,50):
-                buttons[(x,y+i)].configure(bg = "blue")
-        else:
-            button.configure(activeforeground="red")
-            print("Can't place ship here")
+    if(s == 0):
+        print("Pick up the ship!!")
+    else:
+        x= button.winfo_x()
+        y = button.winfo_y()
+        shipSize = s * 50
+        if(orientation=="v"):
+            if(x<=600-shipSize):
+                for i in range(0,shipSize,50):
+                    buttons[(x+i,y)].configure(bg = "blue")
+            else:
+                button.configure(activebackground = "red")
+                print("Can't place ship here")
+        if (orientation == "h"):
+            if (y <= 600-shipSize and x<= 600):
+                for i in range(0,shipSize,50):
+                    buttons[(x,y+i)].configure(bg = "blue")
+            else:
+                button.configure(activeforeground="red")
+                print("Can't place ship here")
 
 
 def fieldFillWithLetters(root, letters, startLocation, endLocation):

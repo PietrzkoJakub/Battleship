@@ -1,13 +1,20 @@
 import sys
 from tkinter import *
-from buttonsChecker import *
 import mainButtons as mb
+from fieldsMarking import *
 
 ship = 0
-
 heightRes = 1080
 widthRes = 1920
-alphabet = [chr(i) for i in range(ord('A'),ord('J')+1)]
+
+def gameTableInit():
+    fields = {}
+    for i in range(100, 600, 50):
+        for j in range(100, 600, 50):
+            fields[(i, j)] = 0
+    return fields
+
+playerGameTable = gameTableInit()
 
 def whichShip(shipSize):
    global ship
@@ -26,6 +33,7 @@ def mainWindowInit():
     fieldMarks(root,alphabet)
     playerButtons = playerButtonsCreate(root, "green", 100, 600)
     enemyButtons = enemyButtonsCreate(root, "yellow", 650, 1150)
+    print(playerGameTable)
     mb.MainButtons()
     ships()
     root.mainloop()
@@ -39,7 +47,6 @@ def enemyButtonsCreate(root, color, start, end):
             buttons[(i, j)] = button
     return buttons
 
-
 def playerButtonsCreate(root, color, start, end):
     buttons = {}
     for i in range(start, end, 50):
@@ -51,51 +58,36 @@ def playerButtonsCreate(root, color, start, end):
             button.bind('<Button-3>', lambda event, b=button: setShip(b, buttons,"h",ship))
     return buttons
 
+
 def setShip(button:Button,buttons:dict,orientation,s):
     if(s == 0):
         print("Pick up the ship!!")
     else:
+        global playerGameTable
         x= button.winfo_x()
         y = button.winfo_y()
         shipSize = s * 50
         if(orientation=="v"):
             if(x<=600-shipSize):
                 for i in range(0,shipSize,50):
-                    buttons[(x+i,y)].configure(bg = "blue")
+                    if(playerGameTable[(x+i,y)]==1):
+                        print("Cant place ship here, ships collision")
+                        button.configure(activebackground="red")
+                        continue
+                    else:
+                        buttons[(x+i,y)].configure(bg = "blue")
+                        playerGameTable[(x+i,y)] = 1
             else:
                 button.configure(activebackground = "red")
-                print("Can't place ship here")
+                print("Can't place ship here, game map out of range")
         if (orientation == "h"):
             if (y <= 600-shipSize and x<= 600):
                 for i in range(0,shipSize,50):
                     buttons[(x,y+i)].configure(bg = "blue")
+                    playerGameTable[(x, y+i)] = 1
             else:
                 button.configure(activeforeground="red")
                 print("Can't place ship here")
-
-
-def fieldFillWithLetters(root, letters, startLocation, endLocation):
-    j = 0
-    for i in range(int(startLocation + 25), int(endLocation + 25), 50):
-        label = Label(root, text=letters[j]).place(x=i, y=75)
-        j += 1
-
-def fieldFillWithNumbers(root,xCordinate):
-    j = 1
-    for i in range(int(100 + 25), int(600 + 25), 50):
-        label = Label(root, text=str(j)).place(x=xCordinate, y=i - 5)
-        j += 1
-
-
-def fieldMarks(root, letters):
-    fieldFillWithLetters(root, letters, 100, 600)
-    fieldFillWithLetters(root, letters, 650, 1150)
-    fieldFillWithNumbers(root, 75)
-    fieldFillWithNumbers(root, 625)
-
-def gameTable():
-    gameTable = [[0 for j in range(10)] for i in range(10)]
-    return gameTable
 
 
 def ships():

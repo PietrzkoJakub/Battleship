@@ -2,7 +2,7 @@ from tkinter import *
 
 class MainButtons:
     def __init__(self):
-        self.button1 = Button(text="New Game")
+        self.button1 = Button(text="New Game",command = self.newGame)
         self.button1.place(x=0, y=0, height=25, width=80)
 
         self.button2 = Button(text="Reset Game", command=self.resetGame)

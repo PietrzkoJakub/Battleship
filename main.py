@@ -15,6 +15,7 @@ def gameTableInit():
     return fields
 
 playerGameTable = gameTableInit()
+print(playerGameTable)
 
 def whichShip(shipSize):
    global ship
@@ -33,7 +34,6 @@ def mainWindowInit():
     fieldMarks(root)
     playerButtons = playerButtonsCreate(root, "green", 100, 600)
     enemyButtons = enemyButtonsCreate(root, "yellow", 650, 1150)
-    print(playerGameTable)
     mb.MainButtons()
     ships()
     root.mainloop()
@@ -72,26 +72,28 @@ def setShip(button:Button,buttons:dict,orientation,s):
         if(orientation=="v"):
             if(x<=600-shipSize):
                 col = colissionChecker(playerGameTable,shipSize,x,y,orientation)
-                fieldBlocker(playerGameTable,shipSize,x,y,orientation)
                 for i in range(0,shipSize,50):
                     if(not col):
                         buttons[(x + i, y)].configure(bg="blue")
                         playerGameTable[(x + i, y)] = 1
+                        fieldBlocker(playerGameTable, shipSize, x, y, orientation)
                     else:
                         button.configure(activebackground="red")
                         print("Can't place ship here, ship collision")
                         break
+                printWhereX(playerGameTable)
             else:
                 button.configure(activebackground = "red")
                 print("Can't place ship here, game map out of range")
+
         if (orientation == "h"):
             if (y <= 600-shipSize and x<= 600):
                 col = colissionChecker(playerGameTable, shipSize, x, y, orientation)
-                fieldBlocker(playerGameTable, shipSize, x, y, orientation)
                 for i in range(0,shipSize,50):
                     if (not col):
                         buttons[(x, y+i)].configure(bg="blue")
                         playerGameTable[(x, y+i)] = 1
+                        fieldBlocker(playerGameTable, shipSize, x, y, orientation)
                     else:
                         button.configure(activebackground="red")
                         print("Can't place ship here, ship collision")
@@ -114,21 +116,36 @@ def colissionChecker(playerGameTable,shipSize,x,y,orient):
         return colission
 
 
-
 def fieldBlocker(playerGameTable,shipSize,x,y,o):
-    if(shipSize==50):
-        playerGameTable[(x + 50, y)] = "X"
-        if(x!=100):
-            playerGameTable[(x - 50, y)] = "X"
-    elif(x+shipSize<600 and x>100  and y>100 and y+shipSize<650): #jezeli statek nie lezy przy zadnej z krawedzi
-        if(o == "v"):
-            for i in range(0,shipSize+100,50): #dla wertykalnch
-                playerGameTable[(x -50 + i, y-50)] = "X" #nad
-                playerGameTable[(x - 50 + i, y + 50)] = "X" #pod
-        elif(o=="h"):
-            for i in range(0,shipSize+100,50): #dla horyzontalnych
-                playerGameTable[(x+50, y-50+i)] = "X" #za
-                playerGameTable[(x - 50, y - 50+i)] = "X" #przed
+    if(o == "v"):
+        for i in range(x-50,x+shipSize+50,50): #poziomo
+            for j in range(y-50,y+100,50):
+                if(i>= 100 and j >=100 and i <=550 and j <=550):
+                    if(playerGameTable[(i,j)]== 0):
+                        playerGameTable[(i,j)] = "X"
+
+    elif(o == "h"):
+        for i in range(x-50,x+100,50): #pionowo
+            for j in range(y-50,y+shipSize+50,50):
+                if (i >= 100 and j >= 100 and i <= 550 and j <= 550):
+                    if(playerGameTable[(i,j)]!= 1 and (i,j) in playerGameTable.keys()):
+                        playerGameTable[(i,j)] = "X"
+
+def printWhereX(playerGameTable):
+    counter = 0
+    for i in range(100, 600, 50):
+        for j in range(100, 600, 50):
+            if(playerGameTable[(i,j)]=="X"):
+                print("(x = {}, y = {})".format(i,j))
+                counter += 1
+    print(counter)
+
+
+def printWhereOne(playerGameTable):
+    for i in range(100, 600, 50):
+        for j in range(100, 600, 50):
+            if(playerGameTable[(i,j)]==1):
+                print("("+i+","+j+")")
 
 def ships():
     fourmast = Button(text="FOURMAST", bg = "purple")

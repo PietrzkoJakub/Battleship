@@ -12,6 +12,7 @@ class Player(GamePlayer):
         self.playerGameTable = self.gameTableInit(0)
         self.playerAllShips = 20
         self.playerButtons = self.playerButtonsCreate()
+        self.playerGoodShot = False
 
     def playerButtonsCreate(self):
         buttons = {}

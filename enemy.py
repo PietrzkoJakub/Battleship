@@ -87,9 +87,53 @@ class Enemy(GamePlayer):
         if self.enemyGameTable[(x, y)] == 1:
             button.configure(bg="blue")
             self.enemyAllShips -= 1
+            self.player.playerGoodShot = True
         else:
             button.configure(bg="red")
-        self.enemyShot()
+            self.player.playerGoodShot = False
+        if(not self.player.playerGoodShot): #jezeli trafie gram dalej
+            self.enemyShot()
+
+    def enemyShot(self):
+        while True:  # komputer bedzie losowal miejsce do strzalu dopoki nie trafi na takie co nie strzelal
+            x = random.randrange(100, 600, 50)
+            y = random.randrange(100, 600, 50)
+            if (x, y) not in self.alreadyShootingHere:
+                if self.player.playerGameTable[(x, y)] == 1:  # jezeli trafi
+                    self.player.playerButtons[(x, y)].configure(bg="yellow")
+                    self.player.playerAllShips -= 1
+                    self.alreadyShootingHere.append((x,y))
+                    self.tryShootWholeShip(x, y)
+                else:
+                    self.player.playerButtons[(x, y)].configure(bg="red")  # jezeli nie trafi
+                    self.alreadyShootingHere.append((x, y))
+                break
+            else:
+                continue
+
+    def isShotGood(self,x,y): #zmienic nazwe
+        if self.player.playerGameTable[(x, y)] == 1:  # jezeli trafi
+            self.player.playerButtons[(x, y)].configure(bg="yellow")
+            self.player.playerAllShips -= 1
+            self.tryShootWholeShip(x,y)
+        else:
+            self.player.playerButtons[(x, y)].configure(bg="red")  # jezeli nie trafi
+            self.alreadyShootingHere.append((x, y))
+
+
+    def tryShootWholeShip(self,x,y):
+        if(x<=500):
+            self.isShotGood(x+50,y)
+        elif (x >= 150):
+            self.isShotGood(x - 50, y)
+        elif(y<=500):
+            self.isShotGood(x,y+50)
+        elif(y>=150):
+            self.isShotGood(x,y-50)
+
+
+"""
+backup
 
     def enemyShot(self):
         while True:  # komputer bedzie losowal miejsce do strzalu dopoki nie trafi na takie co nie strzelal
@@ -100,9 +144,10 @@ class Enemy(GamePlayer):
                     self.player.playerButtons[(x, y)].configure(bg="yellow")
                     self.player.playerAllShips -= 1
                 else:
-                    self.player.playerButtons[(x, y)].configure(bg="red")
+                    self.player.playerButtons[(x, y)].configure(bg="red") #jezeli nie trafi
                     self.alreadyShootingHere.append((x, y))
                 break
             else:
                 continue
-
+                
+"""

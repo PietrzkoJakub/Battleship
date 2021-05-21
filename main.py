@@ -1,22 +1,17 @@
 import sys
 from tkinter import *
-from Windows import *
+from windows import *
 from fieldsMarking import *
-from mainButtons import  *
 from player import *
 from enemy import *
 import random
 from ships import Ship
 
-
-"""
-Moze to przepisywanie sie uda
-"""
-
 """
 Strzelanie dziala tak ze jak ja strzele, to wykonywana jest funkcja strzelajca(komputer)
 Wiec nie ma mozliwosci losowego pierwszego strzalu
-Nie ma algorytmu ktory sprawia ze jak komputer trafi to potem losuje te najblizsze
+Nie ma algorytmu ktory sprawia ze jak komputer trafi to potem losuje te najblizsze 21.05.2021 21:24 teraz jest ale trzeba go dokladniej potestowac
+Na pewno ze strony gracza to dobrze dziala
 Pop upy lub zabronienia niektorych rzeczy trzeba dorobic, na pewno zablokwoac uzytkownikowi strzelac w to samo pole lub strzelac przed wcisneiciem nowej gry
 Przepisac wszystko na klasy i ukrocic duplikacje kodu, bo narazoe nie wyglada to dobrze
 """
@@ -65,19 +60,22 @@ class Game:
 
     def newGame(self):
         if(self.player.oneMast.quantity + self.player.twoMast.quantity+ self.player.threeMast.quantity + self.player.fourMast.quantity == 0):
-            self.enemy.setEnemyShips(4)
-            self.enemy.setEnemyShips(3)
-            self.enemy.setEnemyShips(3)
-            self.enemy.setEnemyShips(2)
-            self.enemy.setEnemyShips(2)
-            self.enemy.setEnemyShips(2)
-            self.enemy.setEnemyShips(1)
-            self.enemy.setEnemyShips(1)
-            self.enemy.setEnemyShips(1)
-            self.enemy.setEnemyShips(1)
+            self.setShipsForEnemy()
             self.whereIsShip()
         else:
             print("Pickup your ships first!!")
+
+    def setShipsForEnemy(self):
+        self.enemy.setEnemyShips(4)
+        self.enemy.setEnemyShips(3)
+        self.enemy.setEnemyShips(3)
+        self.enemy.setEnemyShips(2)
+        self.enemy.setEnemyShips(2)
+        self.enemy.setEnemyShips(2)
+        self.enemy.setEnemyShips(1)
+        self.enemy.setEnemyShips(1)
+        self.enemy.setEnemyShips(1)
+        self.enemy.setEnemyShips(1)
 
 
     def resetGame(self):

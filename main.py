@@ -1,310 +1,336 @@
 import sys
 from tkinter import *
-import mainButtons as mb
+from Windows import *
 from fieldsMarking import *
+from mainButtons import  *
+from player import *
+from enemy import *
 import random
+from ships import Ship
 
 
-ship = 0
-heightRes = 1080
-widthRes = 1920
+"""
+Moze to przepisywanie sie uda
+"""
 
-fourShip = 4
-threeShip = 6
-twoShip = 6
-oneShip = 4
+"""
+Strzelanie dziala tak ze jak ja strzele, to wykonywana jest funkcja strzelajca(komputer)
+Wiec nie ma mozliwosci losowego pierwszego strzalu
+Nie ma algorytmu ktory sprawia ze jak komputer trafi to potem losuje te najblizsze
+Pop upy lub zabronienia niektorych rzeczy trzeba dorobic, na pewno zablokwoac uzytkownikowi strzelac w to samo pole lub strzelac przed wcisneiciem nowej gry
+Przepisac wszystko na klasy i ukrocic duplikacje kodu, bo narazoe nie wyglada to dobrze
+"""
 
-def gameTableInit():
-    fields = {}
-    for i in range(100, 600, 50):
-        for j in range(100, 600, 50):
-            fields[(i, j)] = 0
-    return fields
+"""
+Ten algorytm ze jak odgadnie to strzela dalej trzeba ogarnac
+"""
 
-def enemyGameTableInit():
-    fields = {}
-    for i in range(650, 1150, 50):
-        for j in range(100, 600, 50):
-            fields[(i, j)] = 0
-    return fields
-
-playerGameTable = gameTableInit()
-enemyGameTable = enemyGameTableInit()
-
-def whichShip(shipSize):
-   global ship
-   ship = shipSize
-
-def rootInit():
-    root = Tk()
-    root.geometry(str(widthRes) + "x" + str(heightRes))
-    root.resizable(width=True, height=True)
-    root.title("Battleship")
-    return root
+"""
+Wywalic gettery i settery
+"""
 
 
-def mainWindowInit():
-    root = rootInit()
-    fieldMarks(root)
-    playerButtons = playerButtonsCreate(root, "green", 100, 600)
-    enemyButtons = enemyButtonsCreate(root, "yellow", 650, 1150)
-    mb.MainButtons()
-    ships()
-    enemyShips()
-    print(enemyGameTable)
-    whereIsShip(enemyButtons)
-    root.mainloop()
+class Game:
+    def __init__(self,root):
+        self.root = root
+        self.player = Player(self.root)
+        self.enemy = Enemy(self.root,self.player)
 
-def enemyButtonsCreate(root, color, start, end):
-    buttons = {}
-    for i in range(start, end, 50):
-        for j in range(100, 600, 50):
-            button = Button(root, bg=color)
-            button.place(x=i, y=j, height=50, width=50)
-            buttons[(i, j)] = button
-    return buttons
-
-def playerButtonsCreate(root, color, start, end):
-    buttons = {}
-    for i in range(start, end, 50):
-        for j in range(100, 600, 50):
-            button = Button(root, bg=color)
-            button.place(x=i, y=j, height=50, width=50)
-            buttons[(i, j)] = button
-            button.bind('<Button-1>', lambda event, b=button: setShip(b,buttons,"v",ship))
-            button.bind('<Button-3>', lambda event, b=button: setShip(b, buttons,"h",ship))
-    return buttons
+        self.button1 = Button(root, text="New Game", command=self.newGame)
+        self.button1.place(x=0, y=0, height=25, width=80)
+        self.button2 = Button(root, text="Reset Game", command=self.resetGame)
+        self.button2.place(x=0, y=25, height=25, width=80)
+        self.button3 = Button(root, text="Exit", command=self.exit)
+        self.button3.place(x=0, y=50, height=25, width=80)
 
 
-def setShip(button:Button,buttons:dict,orientation,s):
-    if(s == 0):
-        print("Pick up the ship first!!")
+        self.fourmast = Button(self.root, text="FOURMAST", bg="purple")
+        self.fourmast.place(x=1200, y=200, height=50, width=200)
+        self.fourmast.bind('<Button-1>', lambda event, b=self.fourmast: self.player.playerSetShip(4))
+        self.threemast = Button(text="THREEMAST", bg="purple")
+        self.threemast.place(x=1200, y=250, height=50, width=150)
+        self.threemast.bind('<Button-1>', lambda event, b=self.threemast: self.player.playerSetShip(3))
+        self.twomast = Button(text="TWOMAST", bg="purple")
+        self.twomast.place(x=1200, y=300, height=50, width=100)
+        self.twomast.bind('<Button-1>', lambda event, b=self.twomast: self.player.playerSetShip(2))
+        self.onemast = Button(text="ONE", bg="purple")
+        self.onemast.place(x=1200, y=350, height=50, width=50)
+        self.onemast.bind('<Button-1>', lambda event, b=self.onemast: self.player.playerSetShip(1))
 
-    else:
-        if(not shipIsAvailable(s)):
-            return
+    def mainWindowInit(self):
+        self.root.mainloop()
 
-        global playerGameTable
-        x= button.winfo_x()
-        y = button.winfo_y()
-        shipSize = s * 50
-        if(orientation=="v"):
-            if(x<=600-shipSize):
-                col = colissionChecker(playerGameTable,shipSize,x,y,orientation)
-                for i in range(0,shipSize,50):
-                    if(not col):
-                        buttons[(x + i, y)].configure(bg="blue")
-                        playerGameTable[(x + i, y)] = 1
-                        fieldBlocker(playerGameTable, shipSize, x, y, orientation)
-                        shipIsUsed(s)
-                    else:
-                        button.configure(activebackground="red")
-                        print("Can't place ship here, ship collision")
-                        break
-            else:
-                button.configure(activebackground = "red")
-                print("Can't place ship here, game map out of range")
+    def exit(self):
+        sys.exit(1)
 
-        if (orientation == "h"):
-            if (y <= 600-shipSize and x<= 600):
-                col = colissionChecker(playerGameTable, shipSize, x, y, orientation)
-                for i in range(0,shipSize,50):
-                    if (not col):
-                        buttons[(x, y+i)].configure(bg="blue")
-                        playerGameTable[(x, y+i)] = 1
-                        fieldBlocker(playerGameTable, shipSize, x, y, orientation)
-                        shipIsUsed(s)
-                    else:
-                        button.configure(activebackground="red")
-                        print("Can't place ship here, ship collision")
-                        break
-            else:
-                button.configure(activebackground="red")
-                print("Can't place ship here, game map out of range")
-
-
-def colissionChecker(playerGameTable,shipSize,x,y,orient):
-    colission = False
-    if(orient=="v"):
-        for i in range(0, shipSize, 50):
-            if(playerGameTable[(x + i, y)]!=0):
-                colission = True
-        return colission
-    elif(orient=="h"):
-        for i in range(0, shipSize, 50):
-            if(playerGameTable[(x, y+i)]!=0):
-                colission = True
-        return colission
-
-def fieldBlocker(playerGameTable,shipSize,x,y,o):
-    if(o == "v"):
-        for i in range(x-50,x+shipSize+50,50): #poziomo
-            for j in range(y-50,y+100,50):
-                if(i>= 100 and j >=100 and i <=550 and j <=550):
-                    if(playerGameTable[(i,j)]== 0):
-                        playerGameTable[(i,j)] = "X"
-
-    elif(o == "h"):
-        for i in range(x-50,x+100,50): #pionowo
-            for j in range(y-50,y+shipSize+50,50):
-                if (i >= 100 and j >= 100 and i <= 550 and j <= 550):
-                    if(playerGameTable[(i,j)]!= 1 and (i,j) in playerGameTable.keys()):
-                        playerGameTable[(i,j)] = "X"
-
-
-def shipIsUsed(s):
-    if(s==1):
-        global oneShip
-        oneShip -= 1
-    elif (s == 2):
-        global twoShip
-        twoShip -= 1
-    elif (s == 3):
-        global threeShip
-        threeShip -= 1
-    elif (s == 4):
-        global fourShip
-        fourShip -= 1
-
-def shipIsAvailable(s):
-    if(s==1):
-        global oneShip
-        if(oneShip==0):
-            return False
+    def newGame(self):
+        if(self.player.oneMast.quantity + self.player.twoMast.quantity+ self.player.threeMast.quantity + self.player.fourMast.quantity == 0):
+            self.enemy.setEnemyShips(4)
+            self.enemy.setEnemyShips(3)
+            self.enemy.setEnemyShips(3)
+            self.enemy.setEnemyShips(2)
+            self.enemy.setEnemyShips(2)
+            self.enemy.setEnemyShips(2)
+            self.enemy.setEnemyShips(1)
+            self.enemy.setEnemyShips(1)
+            self.enemy.setEnemyShips(1)
+            self.enemy.setEnemyShips(1)
+            self.whereIsShip()
         else:
-            return True
-    elif (s == 2):
-        global twoShip
-        if (twoShip == 0):
-            return False
-        else:
-            return True
-    elif (s == 3):
-        global threeShip
-        if (threeShip == 0):
-            return False
-        else:
-            return True
-    elif (s == 4):
-        global fourShip
-        if (fourShip == 0):
-            return False
-        else:
-            return True
-
-def enemyShips():
-    setEnemyShips(4)
-    setEnemyShips(3)
-    setEnemyShips(3)
-    setEnemyShips(2)
-    setEnemyShips(2)
-    setEnemyShips(2)
-    setEnemyShips(1)
-    setEnemyShips(1)
-    setEnemyShips(1)
-    setEnemyShips(1)
+            print("Pickup your ships first!!")
 
 
-def setEnemyShips(s):
-    notPlaced = True
-    global enemyGameTable
-    while notPlaced:
-        x = random.randrange(650,1150,50)
-        y = random.randrange(100,550,50)
-        o = random.randint(0,1)
-        shipSize = s * 50
-        if(o==0): #poziomo
-            if (x <= 1150 - shipSize):
-                col = enemyColissionChecker(enemyGameTable, shipSize, x, y,o)
-                for i in range(0, shipSize, 50):
-                    if (not col):
-                        enemyGameTable[(x + i, y)] = 1
-                        enemyFieldBlocker(enemyGameTable, shipSize, x, y,o)
-                        notPlaced = False
-        else:
-            if (y <= 600 - shipSize and x <= 1150):
-                col = enemyColissionChecker(enemyGameTable, shipSize, x, y, o)
-                for i in range(0, shipSize, 50):
-                    if (not col):
-                        enemyGameTable[(x, y + i)] = 1
-                        enemyFieldBlocker(enemyGameTable, shipSize, x, y, o)
-                        notPlaced = False
+    def resetGame(self):
+        pass
 
-def enemyColissionChecker(gameTable,shipSize,x,y,o):
-    colission = False
-    if(o==0):
-        for i in range(0, shipSize, 50):
-            if(gameTable[(x + i, y)]!=0):
-                colission = True
-        return colission
-    else:
-        for i in range(0, shipSize, 50):
-            if (gameTable[(x, y + i)] != 0):
-                colission = True
-        return colission
-
-def enemyFieldBlocker(gameTable,shipSize,x,y,o):
-    if (o == 0):
-        for i in range(x - 50, x + shipSize + 50, 50):  # poziomo
-            for j in range(y - 50, y + 100, 50):
-                if (i >= 650 and j >= 100 and i <= 1100 and j <= 550):
-                    if (gameTable[(i, j)] == 0):
-                        gameTable[(i, j)] = "X"
-    else:
-        for i in range(x - 50, x + 100, 50):  # pionowo
-            for j in range(y - 50, y + shipSize + 50, 50):
-                if (i >= 650 and j >= 100 and i <= 1100 and j <= 550):
-                    if (gameTable[(i, j)] != 1 and (i, j) in gameTable.keys()):
-                        gameTable[(i, j)] = "X"
-
-def whereIsShip(buttonTable):
-    global enemyGameTable
-    for i in range(650,1150,50):
-        for j in range(100,600,50):
-            if enemyGameTable[(i,j)] == 1:
-                buttonTable[(i,j)].configure(bg = "red")
-
-
-
-def ships():
-    fourmast = Button(text="FOURMAST", bg = "purple")
-    fourmast.place(x=1200, y=200, height=50, width=200)
-    fourmast.bind('<Button-1>', lambda event, b=fourmast: whichShip(4))
-    threemast = Button(text="THREEMAST", bg="purple")
-    threemast.place(x=1200, y=250, height=50, width=150)
-    threemast.bind('<Button-1>', lambda event, b=threemast: whichShip(3))
-    twomast = Button(text="TWOMAST", bg="purple")
-    twomast.place(x=1200, y=300, height=50, width=100)
-    twomast.bind('<Button-1>', lambda event, b=twomast: whichShip(2))
-    onemast = Button(text="ONE", bg="purple")
-    onemast.place(x=1200, y=350, height=50, width=50)
-    onemast.bind('<Button-1>', lambda event, b=onemast: whichShip(1))
+    def whereIsShip(self):
+        for i in range(650, 1150, 50):
+            for j in range(100, 600, 50):
+                if self.enemy.enemyGameTable[(i, j)] == 1:
+                    self.enemy.enemyButtons[(i, j)].configure(bg="red")
 
 
 if __name__ == '__main__':
-    mainWindowInit()
+    display = Display(1920,1080,True,True,"Baattleship")
+    root = display.getroot()
+    Game(root).mainWindowInit()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 """
-def printWhereX(gameTable):
-    counter = 0
-    for i in range(100, 600, 50):
-        for j in range(100, 600, 50):
-            if(gameTable[(i,j)]=="X"):
-                print("(x = {}, y = {})".format(i,j))
-                counter += 1
-    print(counter)
+if __name__ == '__main__':
+    display = Display(1920,1080,True,True,"Baattleship")
+    root = display.getroot()
+    Game(root).mainWindowInit()
+    #root.mainloop() #temporary
+    #MainButtons(root)
+    #playerFieldMarks = FieldsMark(root,100,600,75) # nie wiem czy to wszystko nie jest zbedne po prostu
+    #playerFieldMarks.fieldFillWithNumbers()
+    #playerFieldMarks.fieldFillWithLetters() to sprawdzic
+    #enemyFieldMarks = FieldsMark(root, 550, 1150,625)
+    #enemyFieldMarks.fieldFillWithNumbers()
+    #enemyFieldMarks.fieldFillWithLetters()
+    #tu zaraz bedzie nowe
 
 
+class Game:
+    def __init__(self,root):
+        self.root = root
+        self.ship = 0
+        self.fourMast = Ship(4,1)
+        self.threeMast = Ship(3,2)
+        self.twoMast = Ship(2,3)
+        self.oneMast = Ship(1,4)
+        self.enemyAllShips = 20
+        self.playerAllShips = 20
+        self.playerGameTable = self.gameTableInit(0)
+        self.enemyGameTable = {} #init in newgame method
+        self.playerButtons = self.playerButtonsCreate()
+        self.enemyButtons = self.enemyButtonsCreate()
+        self.alreadyShootingHere = []
+        self.horizontal = "h"
+        self.vertical = "v"
 
+        #To na pewno przepisac do metod
+        self.fourmast = Button(self.root,text="FOURMAST", bg="purple")
+        self.fourmast.place(x=1200, y=200, height=50, width=200)
+        self.fourmast.bind('<Button-1>', lambda event, b=self.fourmast: self.whichShip(self.fourMast))
+        self.threemast = Button(text="THREEMAST", bg="purple")
+        self.threemast.place(x=1200, y=250, height=50, width=150)
+        self.threemast.bind('<Button-1>', lambda event, b=self.threemast: self.whichShip(self.threeMast))
+        self.twomast = Button(text="TWOMAST", bg="purple")
+        self.twomast.place(x=1200, y=300, height=50, width=100)
+        self.twomast.bind('<Button-1>', lambda event, b=self.twomast: self.whichShip(self.twoMast))
+        self.onemast = Button(text="ONE", bg="purple")
+        self.onemast.place(x=1200, y=350, height=50, width=50)
+        self.onemast.bind('<Button-1>', lambda event, b=self.onemast: self.whichShip(self.oneMast))
 
-def printWhereOne(gameTable):
-    counter = 0
-    for i in range(100, 600, 50):
-        for j in range(100, 600, 50):
-            if(gameTable[(i,j)]==1):
-                print("("+i+","+j+")")
-                counter += 1
-    print(counter)
+        #przyciski glowne przeniesione z innej klasy
+        self.button1 = Button(root, text="New Game", command=self.newGame)
+        self.button1.place(x=0, y=0, height=25, width=80)
+
+        self.button2 = Button(root, text="Reset Game", command=self.resetGame)
+        self.button2.place(x=0, y=25, height=25, width=80)
+
+        self.button3 = Button(root, text="Exit", command=self.exit)
+        self.button3.place(x=0, y=50, height=25, width=80)
+
+    def exit(self):
+        sys.exit(1)
+
+    def newGame(self):
+        if (self.fourMast.getQuantity() + self.threeMast.getQuantity() + self.twoMast.getQuantity() + self.oneMast.getQuantity() == 0):
+            self.enemyGameTable = self.gameTableInit(550)
+            #enemyShips()
+            #whereIsShip(enemyButtons)
+        else:
+            print("Put all Your ships on the map first")
+
+    def resetGame(self):
+        pass
+
+    def mainWindowInit(self):
+        self.root.mainloop()
+
+    def whichShip(self,ship:Ship):
+        self.ship = ship.getSize()
+
+    def playerButtonsCreate(self):
+        buttons = {}
+        for i in range(100, 600, 50):
+            for j in range(100, 600, 50):
+                button = Button(root, bg="green")
+                button.place(x=i, y=j, height=50, width=50)
+                buttons[(i, j)] = button
+                button.bind('<Button-1>', lambda event, b=button: self.setShip(b, self.vertical))
+                button.bind('<Button-3>', lambda event, b=button: self.setShip(b, self.horizontal))
+        return buttons
+
+    def enemyButtonsCreate(self):
+        buttons = {}
+        for i in range(650, 1150, 50):
+            for j in range(100, 600, 50):
+                button = Button(root, bg="yellow")
+                button.place(x=i, y=j, height=50, width=50)
+                button.bind('<Button-1>', lambda event, b=button: self.shot(b))
+                buttons[(i, j)] = button
+        return buttons
+
+    def shot(self,button:Button):
+        pass
+
+    def gameTableInit(self,pixels):
+        fields = {}
+        for i in range(100+pixels, 600+pixels,50):
+            for j in range(100, 600, 50):
+                fields[(i, j)] = 0
+        return fields
+
+    def setShip(self,button,orientation):
+
+        if (self.ship == 0):
+            print("Pick up the ship first!!")
+        else:
+            if (not self.shipIsAvailable()):
+                return
+            x = button.winfo_x()
+            y = button.winfo_y()
+            shipSize = self.ship * 50
+            if (orientation == "v"):
+                if (x <= 600 - shipSize):
+                    col = self.colissionChecker(shipSize, x, y, orientation)
+                    for i in range(0, shipSize, 50):
+                        if (not col):
+                            self.playerButtons[(x + i, y)].configure(bg="blue")
+                            self.playerGameTable[(x + i, y)] = 1
+                            self.fieldBlocker(shipSize, x, y, orientation)
+                            self.shipIsUsed()
+                        else:
+                            button.configure(activebackground="red")
+                            print("Can't place ship here, ship collision")
+                            break
+                else:
+                    button.configure(activebackground="red")
+                    print("Can't place ship here, game map out of range")
+
+            if (orientation == "h"):
+                if (y <= 600 - shipSize and x <= 600):
+                    col = self.colissionChecker(shipSize, x, y, orientation)
+                    for i in range(0, shipSize, 50):
+                        if (not col):
+                            self.playerButtons[(x, y + i)].configure(bg="blue")
+                            self.playerGameTable[(x, y + i)] = 1
+                            self.fieldBlocker(shipSize, x, y, orientation)
+                            self.shipIsUsed()
+                        else:
+                            button.configure(activebackground="red")
+                            print("Can't place ship here, ship collision")
+                            break
+                else:
+                    button.configure(activebackground="red")
+                    print("Can't place ship here, game map out of range")
+
+    def colissionChecker(self,shipSize, x, y, orient):
+        colission = False
+        if (orient == "v"):
+            for i in range(0, shipSize, 50):
+                if (self.playerGameTable[(x + i, y)] != 0):
+                    colission = True
+            return colission
+        elif (orient == "h"):
+            for i in range(0, shipSize, 50):
+                if (self.playerGameTable[(x, y + i)] != 0):
+                    colission = True
+            return colission
+
+    def fieldBlocker(self, shipSize, x, y, o):
+        if (o == "v"):
+            for i in range(x - 50, x + shipSize + 50, 50):  # poziomo
+                for j in range(y - 50, y + 100, 50):
+                    if (i >= 100 and j >= 100 and i <= 550 and j <= 550):
+                        if (self.playerGameTable[(i, j)] == 0):
+                            self.playerGameTable[(i, j)] = "X"
+
+        elif (o == "h"):
+            for i in range(x - 50, x + 100, 50):  # pionowo
+                for j in range(y - 50, y + shipSize + 50, 50):
+                    if (i >= 100 and j >= 100 and i <= 550 and j <= 550):
+                        if (self.playerGameTable[(i, j)] != 1 and (i, j) in self.playerGameTable.keys()):
+                            self.playerGameTable[(i, j)] = "X"
+
+    def shipIsUsed(self):
+        if (self.ship == 1):
+            self.oneMast.setQuantity(self.oneMast.getQuantity() - 1)
+        elif (self.ship == 2):
+            self.twoMast.setQuantity(self.twoMast.getQuantity() - 1)
+        elif (self.ship == 3):
+            self.threeMast.setQuantity(self.threeMast.getQuantity() - 1)
+        elif (self.ship == 4):
+            print(self.fourMast.getQuantity())
+            self.fourMast.setQuantity(self.fourMast.getQuantity() - 1)
+
+    def shipIsAvailable(self):
+        if (self.ship == 1):
+            if (self.oneMast.getQuantity() == 0):
+                return False
+            else:
+                return True
+        elif (self.ship == 2):
+            if (self.twoMast.getQuantity() == 0):
+                return False
+            else:
+                return True
+        elif (self.ship == 3):
+            if (self.threeMast.getQuantity() == 0):
+                return False
+            else:
+                return True
+        elif (self.ship == 4):
+            if (self.fourMast.getQuantity() == 0):
+                return False
+            else:
+                return True
+
 """
-

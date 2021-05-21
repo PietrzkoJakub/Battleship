@@ -2,7 +2,7 @@ from tkinter import *
 from random import *
 from ships import  Ship
 
-class GamePlayer:
+class GamePlayer: #tu mozna dict compershion
     def gameTableInit(self,pixels):
         fields = {}
         for i in range(100+pixels, 600+pixels,50):

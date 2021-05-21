@@ -13,7 +13,10 @@ Wiec nie ma mozliwosci losowego pierwszego strzalu
 Nie ma algorytmu ktory sprawia ze jak komputer trafi to potem losuje te najblizsze 21.05.2021 21:24 teraz jest ale trzeba go dokladniej potestowac
 Na pewno ze strony gracza to dobrze dziala
 Pop upy lub zabronienia niektorych rzeczy trzeba dorobic, na pewno zablokwoac uzytkownikowi strzelac w to samo pole lub strzelac przed wcisneiciem nowej gry
-Przepisac wszystko na klasy i ukrocic duplikacje kodu, bo narazoe nie wyglada to dobrze
+Ukrocic duplikacje kodu, bo narazoe nie wyglada to dobrze
+Dodac metody wirtualne
+Dodac wyjatki i polaczyc je z pop upami
+No i tesy
 """
 
 """
@@ -79,7 +82,7 @@ class Game:
 
 
     def resetGame(self):
-        pass
+        PopUp(150, 75, False, False, "Przegrana").root.grab_set_global()
 
     def whereIsShip(self):
         for i in range(650, 1150, 50):

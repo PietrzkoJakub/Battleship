@@ -1,6 +1,7 @@
 from gameplayer import *
 from player import *
 import random
+from windows import PopUp
 
 class Enemy(GamePlayer):
 
@@ -91,8 +92,14 @@ class Enemy(GamePlayer):
         else:
             button.configure(bg="red")
             self.player.playerGoodShot = False
+        if(self.enemyAllShips == 0):
+            PopUp(150,75,False,False,"Wygrana").root.grab_set_global()
+        if (self.player.playerAllShips == 0):
+            PopUp(150, 75, False, False, "Przegrana").root.grab_set_global()
+
         if(not self.player.playerGoodShot): #jezeli trafie gram dalej
             self.enemyShot()
+
 
     def enemyShot(self):
         while True:  # komputer bedzie losowal miejsce do strzalu dopoki nie trafi na takie co nie strzelal

@@ -82,7 +82,7 @@ class Game:
 
 
     def resetGame(self):
-        PopUp(150, 75, False, False, "Przegrana").root.grab_set_global()
+        Game(self.root) #chyba dziala
 
     def whereIsShip(self):
         for i in range(650, 1150, 50):

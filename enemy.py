@@ -6,7 +6,6 @@ from windows import PopUp
 class Enemy(GamePlayer):
 
     def __init__(self,root,player:Player): # to rozwianie z playerem mi sie nie podoba
-        #self.ship = 0
         self.player = player
         self.root = root
         self.fourMast = Ship(4, 1)

@@ -83,14 +83,17 @@ class Enemy(GamePlayer):
 
 
     def shot(self,button:Button):
+        if(button["state"] == "disabled"): #jezeli gracz juz tu strzelal
+            print("You already shoot here")
+            return
         x = button.winfo_x()
         y = button.winfo_y()
-        if self.enemyGameTable[(x, y)] == 1:
-            button.configure(bg="blue")
+        if self.enemyGameTable[(x, y)] == 1: #jezeli gracz trafi
+            button.configure(bg="blue", state = "disabled")
             self.enemyAllShips -= 1
             self.player.playerGoodShot = True
         else:
-            button.configure(bg="red")
+            button.configure(bg="red",state = "disabled") #jezeli nie trafi
             self.player.playerGoodShot = False
         if(self.enemyAllShips == 0):
             PopUp(150,75,False,False,"Wygrana").root.grab_set_global()

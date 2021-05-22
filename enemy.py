@@ -29,6 +29,19 @@ class Enemy(GamePlayer):
                 buttons[(i, j)] = button
         return buttons
 
+    def setShips(self):
+        self.setEnemyShips(4)
+        self.setEnemyShips(3)
+        self.setEnemyShips(3)
+        self.setEnemyShips(2)
+        self.setEnemyShips(2)
+        self.setEnemyShips(2)
+        self.setEnemyShips(1)
+        self.setEnemyShips(1)
+        self.setEnemyShips(1)
+        self.setEnemyShips(1)
+
+
     def setEnemyShips(self,ship): #zobaczymy czy przekazanie tej zmiennej tu wystarczy
         self.notPlaced = True
         while self.notPlaced:
@@ -82,17 +95,14 @@ class Enemy(GamePlayer):
 
 
     def shot(self,button:Button):
-        if(button["state"] == "disabled"): #jezeli gracz juz tu strzelal
-            print("You already shoot here")
-            return
         x = button.winfo_x()
         y = button.winfo_y()
-        if self.enemyGameTable[(x, y)] == 1: #jezeli gracz trafi
-            button.configure(bg="blue", state = "disabled")
+        if self.enemyGameTable[(x, y)] == 1:
+            button.configure(bg="blue")
             self.enemyAllShips -= 1
             self.player.playerGoodShot = True
         else:
-            button.configure(bg="red",state = "disabled") #jezeli nie trafi
+            button.configure(bg="red")
             self.player.playerGoodShot = False
         if(self.enemyAllShips == 0):
             PopUp(150,75,False,False,"Wygrana").root.grab_set_global()
@@ -107,12 +117,20 @@ class Enemy(GamePlayer):
         while True:  # komputer bedzie losowal miejsce do strzalu dopoki nie trafi na takie co nie strzelal
             x = random.randrange(100, 600, 50)
             y = random.randrange(100, 600, 50)
+
+            hardLevel = random.randint(0,5)
+            if(hardLevel < 4):
+                if(self.player.playerGameTable[(x,y)] == "X"):
+                    continue
+
             if (x, y) not in self.alreadyShootingHere:
                 if self.player.playerGameTable[(x, y)] == 1:  # jezeli trafi
                     self.player.playerButtons[(x, y)].configure(bg="yellow")
                     self.player.playerAllShips -= 1
                     self.alreadyShootingHere.append((x,y))
-                    self.tryShootWholeShip(x, y)
+                    self.enemyShot() # jak przeciwnik trafi to ma kolejny strzal
+                    #self.tryShootWholeShip(x, y) #to psuje to ze przegrana nie dziala jak powinna
+                    #ogolnie ta przegrana sie wyswietla pozniej niz powinna
                 else:
                     self.player.playerButtons[(x, y)].configure(bg="red")  # jezeli nie trafi
                     self.alreadyShootingHere.append((x, y))
@@ -120,7 +138,35 @@ class Enemy(GamePlayer):
             else:
                 continue
 
-    def isShotGood(self,x,y): #zmienic nazwe
+    def tryShootWholeShip(self, x, y):
+        if (x <= 500 and (x+50,y)  not in self.alreadyShootingHere):
+            x = x+50
+            self.isShotGood(x, y)
+
+        elif (x >= 150 and (x-50,y) not in self.alreadyShootingHere):
+            x = x-50
+            self.isShotGood(x, y)
+
+        elif (y <= 500 and (x,y+50)  not in self.alreadyShootingHere):
+            y = y + 50
+            self.isShotGood(x, y)
+
+        elif (y >= 150 and (x,y-50)  not in self.alreadyShootingHere):
+            y = y-50
+            self.isShotGood(x, y)
+        else:
+            print("Okey now what?")
+
+    def isShotGood(self, x, y):  # zmienic nazwe
+        if self.player.playerGameTable[(x, y)] == 1:  # jezeli trafi
+            self.player.playerButtons[(x, y)].configure(bg="yellow")
+            self.player.playerAllShips -= 1
+            self.tryShootWholeShip(x, y)
+        else:
+            self.player.playerButtons[(x, y)].configure(bg="red")  # jezeli nie trafi
+            self.alreadyShootingHere.append((x, y))
+    """
+        def isShotGood(self,x,y): #zmienic nazwe
         if self.player.playerGameTable[(x, y)] == 1:  # jezeli trafi
             self.player.playerButtons[(x, y)].configure(bg="yellow")
             self.player.playerAllShips -= 1
@@ -128,8 +174,6 @@ class Enemy(GamePlayer):
         else:
             self.player.playerButtons[(x, y)].configure(bg="red")  # jezeli nie trafi
             self.alreadyShootingHere.append((x, y))
-
-
     def tryShootWholeShip(self,x,y):
         if(x<=500):
             self.isShotGood(x+50,y)
@@ -139,24 +183,6 @@ class Enemy(GamePlayer):
             self.isShotGood(x,y+50)
         elif(y>=150):
             self.isShotGood(x,y-50)
+    
+    """
 
-
-"""
-backup
-
-    def enemyShot(self):
-        while True:  # komputer bedzie losowal miejsce do strzalu dopoki nie trafi na takie co nie strzelal
-            x = random.randrange(100, 600, 50)
-            y = random.randrange(100, 600, 50)
-            if (x, y) not in self.alreadyShootingHere:
-                if self.player.playerGameTable[(x, y)] == 1:  # jezeli trafi
-                    self.player.playerButtons[(x, y)].configure(bg="yellow")
-                    self.player.playerAllShips -= 1
-                else:
-                    self.player.playerButtons[(x, y)].configure(bg="red") #jezeli nie trafi
-                    self.alreadyShootingHere.append((x, y))
-                break
-            else:
-                continue
-                
-"""

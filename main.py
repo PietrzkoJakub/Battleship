@@ -23,12 +23,17 @@ No i tesy
 Jescze przegrana nie dziala jak trzeba, za wczesnie sie chyba odapala
 """
 
-"""
-Ten algorytm ze jak odgadnie to strzela dalej trzeba ogarnac
-"""
 
 """
 Wywalic gettery i settery
+"""
+
+
+"""
+Aktulizacja na 23.05.2021 19:16
+Algorytm losujacy zostal mniej wiecej napisany ale trzeba go przenalizowac
+Wygrana i przegrana dziala tak ze trzeba kliknac jescze raz zeby sie napis wyswietlil wiec to mozna poprawic
+Przegrana i wygrana dzialaja poprawnie
 """
 
 
@@ -68,7 +73,7 @@ class Game:
     def newGame(self):
         if(self.player.oneMast.quantity + self.player.twoMast.quantity+ self.player.threeMast.quantity + self.player.fourMast.quantity == 0):
             self.enemy.setShips()
-            self.whereIsShip()
+            #self.whereIsShip()
         else:
             print("Pickup your ships first!!")
 

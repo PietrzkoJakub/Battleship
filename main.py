@@ -73,7 +73,9 @@ class Game:
     def newGame(self):
         if(self.player.oneMast.quantity + self.player.twoMast.quantity+ self.player.threeMast.quantity + self.player.fourMast.quantity == 0):
             self.enemy.setShips()
+            self.enemy.enableButtons()
             #self.whereIsShip()
+
         else:
             print("Pickup your ships first!!")
 

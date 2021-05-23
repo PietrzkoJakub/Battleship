@@ -26,11 +26,16 @@ class Enemy(GamePlayer):
         buttons = {}
         for i in range(650, 1150, 50):
             for j in range(100, 600, 50):
-                button = Button(self.root, bg="yellow")
+                button = Button(self.root, bg="yellow",state = "disabled")
                 button.place(x=i, y=j, height=50, width=50)
                 button.bind('<Button-1>', lambda event, b=button: self.shot(b))
                 buttons[(i, j)] = button
         return buttons
+
+    def enableButtons(self):
+        for i in range(650, 1150, 50):
+            for j in range(100, 600, 50):
+                self.enemyButtons[(i,j)].configure(state = "normal")
 
     def setShips(self):
         self.setEnemyShips(4)

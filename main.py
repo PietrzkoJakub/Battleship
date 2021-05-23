@@ -30,10 +30,12 @@ Wywalic gettery i settery
 
 
 """
-Aktulizacja na 23.05.2021 19:16
+Aktulizacja na 23.05.2021 
 Algorytm losujacy zostal mniej wiecej napisany ale trzeba go przenalizowac
-Wygrana i przegrana dziala tak ze trzeba kliknac jescze raz zeby sie napis wyswietlil wiec to mozna poprawic
+Wygrana i przegrana dziala tak ze trzeba kliknac jescze raz zeby sie napis wyswietlil wiec to mozna poprawic #dziala to juz poprawnie
 Przegrana i wygrana dzialaja poprawnie
+W klasie gameplayer zostaly dodane metody wirtualne i zainicjowane w player i enemy
+Usunalem gettery i settery
 """
 
 
@@ -72,12 +74,12 @@ class Game:
 
     def newGame(self):
         if(self.player.oneMast.quantity + self.player.twoMast.quantity+ self.player.threeMast.quantity + self.player.fourMast.quantity == 0):
-            self.enemy.setShips()
+            self.enemy.pleaceEnemyShipsOnMap()
             self.enemy.enableButtons()
             #self.whereIsShip()
 
         else:
-            print("Pickup your ships first!!")
+            PopUp(150, 75, False, False, "Pickup your ships first!!")
 
     def resetGame(self):
         Game(self.root) #chyba dziala

@@ -7,15 +7,11 @@ class GamePlayer: #tu mozna dict compershion
         fields = {(i,j): 0 for i in range(100+pixels, 600+pixels,50) for  j in range(100, 600, 50)}
         return fields
 
-"""
-backup 
- def gameTableInit(self,pixels):
-        fields = {}
-        for i in range(100+pixels, 600+pixels,50):
-            for j in range(100, 600, 50):
-                fields[(i, j)] = 0
-        return fields
+    def setShip(self):
+        pass
 
+    def colissionChecker(self):
+        pass
 
-
-"""
+    def fieldBlocker(self):
+        pass

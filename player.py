@@ -100,35 +100,34 @@ class Player(GamePlayer):
 
     def shipIsUsed(self):
         if (self.ship == 1):
-            self.oneMast.setQuantity(self.oneMast.getQuantity() - 1)
+            self.oneMast.quantity -= 1
         elif (self.ship == 2):
-            self.twoMast.setQuantity(self.twoMast.getQuantity() - 1)
+            self.twoMast.quantity -= 1
         elif (self.ship == 3):
-            self.threeMast.setQuantity(self.threeMast.getQuantity() - 1)
+            self.threeMast.quantity -= 1
         elif (self.ship == 4):
-            print(self.fourMast.getQuantity())
-            self.fourMast.setQuantity(self.fourMast.getQuantity() - 1)
+            self.fourMast.quantity -= 1
 
 
 
     def shipIsAvailable(self):
         if (self.ship == 1):
-            if (self.oneMast.getQuantity() == 0):
+            if (self.oneMast.quantity == 0):
                 return False
             else:
                 return True
         elif (self.ship == 2):
-            if (self.twoMast.getQuantity() == 0):
+            if (self.twoMast.quantity == 0):
                 return False
             else:
                 return True
         elif (self.ship == 3):
-            if (self.threeMast.getQuantity() == 0):
+            if (self.threeMast.quantity == 0):
                 return False
             else:
                 return True
         elif (self.ship == 4):
-            if (self.fourMast.getQuantity() == 0):
+            if (self.fourMast.quantity == 0):
                 return False
             else:
                 return True

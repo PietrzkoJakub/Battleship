@@ -37,20 +37,20 @@ class Enemy(GamePlayer):
             for j in range(100, 600, 50):
                 self.enemyButtons[(i,j)].configure(state = "normal")
 
-    def setShips(self):
-        self.setEnemyShips(4)
-        self.setEnemyShips(3)
-        self.setEnemyShips(3)
-        self.setEnemyShips(2)
-        self.setEnemyShips(2)
-        self.setEnemyShips(2)
-        self.setEnemyShips(1)
-        self.setEnemyShips(1)
-        self.setEnemyShips(1)
-        self.setEnemyShips(1)
+    def pleaceEnemyShipsOnMap(self):
+        self.setShip(4)
+        self.setShip(3)
+        self.setShip(3)
+        self.setShip(2)
+        self.setShip(2)
+        self.setShip(2)
+        self.setShip(1)
+        self.setShip(1)
+        self.setShip(1)
+        self.setShip(1)
 
 
-    def setEnemyShips(self,ship): #zobaczymy czy przekazanie tej zmiennej tu wystarczy
+    def setShip(self, ship): #zobaczymy czy przekazanie tej zmiennej tu wystarczy
         self.notPlaced = True
         while self.notPlaced:
             x = random.randrange(650, 1150, 50)
@@ -59,22 +59,22 @@ class Enemy(GamePlayer):
             self.shipSize = ship * 50
             if (o == 0):  # poziomo
                 if (x <= 1150 - self.shipSize):
-                    col = self.enemyColissionChecker(x, y, o)
+                    col = self.colissionChecker(x, y, o)
                     for i in range(0, self.shipSize, 50):
                         if (not col):
                             self.enemyGameTable[(x + i, y)] = 1
-                            self.enemyFieldBlocker(x, y, o)
+                            self.fieldBlocker(x, y, o)
                             self.notPlaced = False
             else:
                 if (y <= 600 - self.shipSize and x <= 1150):
-                    col = self.enemyColissionChecker(x, y, o)
+                    col = self.colissionChecker(x, y, o)
                     for i in range(0, self.shipSize, 50):
                         if (not col):
                             self.enemyGameTable[(x, y + i)] = 1
-                            self.enemyFieldBlocker(x, y, o)
+                            self.fieldBlocker(x, y, o)
                             self.notPlaced = False
 
-    def enemyColissionChecker(self, x, y, o):
+    def colissionChecker(self, x, y, o):
         colission = False
         if (o == 0):
             for i in range(0, self.shipSize, 50):
@@ -87,7 +87,7 @@ class Enemy(GamePlayer):
                     colission = True
             return colission
 
-    def enemyFieldBlocker(self, x, y, o):
+    def fieldBlocker(self, x, y, o):
         if (o == 0):
             for i in range(x - 50, x + self.shipSize + 50, 50):  # poziomo
                 for j in range(y - 50, y + 100, 50):
@@ -183,38 +183,6 @@ class Enemy(GamePlayer):
         else:
             self.player.playerButtons[(x, y)].configure(bg="red")  # jezeli nie trafi
             self.alreadyShootingHere.append((x, y))
-
-
-
-    """
-    def tryShootWholeShip(self, x, y):
-        if(self.recursionStop > 0 ):
-            if(x<=500 and (x+50,y)  not in self.alreadyShootingHere):
-                self.shotRec(x+50,y)
-            elif(x>150 and (x-50,y) not in self.alreadyShootingHere):
-                self.shotRec(x-50,y)
-            elif (y > 150 and (x, y-50) not in self.alreadyShootingHere):
-                self.shotRec(x, y-50)
-            elif (y <= 500 and (x, y+50) not in self.alreadyShootingHere):
-                self.shotRec(x, y+50)
-            else:
-                print("Pozostale przypadki, wykonuje losowy strzal")
-                self.enemyShot()
-        else:
-            print("end of recursion")
-
-    def shotRec(self,x,y):
-        self.recursionStop -= 1
-        if self.player.playerGameTable[(x, y)] == 1:  # jezeli trafi
-            self.player.playerButtons[(x, y)].configure(bg="yellow")
-            self.player.playerAllShips -= 1
-            self.alreadyShootingHere.append((x, y))
-            self.tryShootWholeShip(x,y)
-        else:
-            self.player.playerButtons[(x, y)].configure(bg="red")  # jezeli nie trafi
-            self.alreadyShootingHere.append((x, y))
-    """
-
 
 
 

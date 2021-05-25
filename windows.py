@@ -18,13 +18,15 @@ class Display(Window):
     def getroot(self):
         return self.root
 
-class PopUp(Window): #mozna w sumie zrobic klase display z ktorej ta bedzie dziedziczyc, dobra to dopracowac
-    def __init__(self,height,width,isResW,isResH,mess):
-        super().__init__(height,width,isResW,isResH)
-        self.label = Label(self.root, text = mess)
-        self.label.place(x=10, y= 35)
+class PopUp(Window):
+    def __init__(self, mess):
+        super().__init__(250,60,False,False)
+        self.label = Label(self.root, text = mess,anchor = "center")
+        self.label.pack()
         self.button = Button(self.root, text="OK",command = self.closePopUp)
-        self.button.place(x=75,y=45)
+        self.button.place(x=50,y=30)
 
     def closePopUp(self):
         self.root.destroy()
+
+

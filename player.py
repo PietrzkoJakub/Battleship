@@ -1,5 +1,6 @@
 from tkinter import *
 from gameplayer import *
+from windows import *
 
 class Player(GamePlayer):
     def __init__(self,root):
@@ -28,7 +29,7 @@ class Player(GamePlayer):
 
     def setShip(self,button:Button,orientation):
         if (self.ship == 0):
-            print("Pick up the ship first!!")
+            PopUp("Pick up the ship first!").root.grab_set_global()
         else:
             if (not self.shipIsAvailable()):
                 return
@@ -45,12 +46,12 @@ class Player(GamePlayer):
                             self.fieldBlocker(shipSize, x, y, orientation)
                             self.shipIsUsed()
                         else:
-                            button.configure(activebackground="red")
-                            print("Can't place ship here, ship collision")
+                            #button.configure(activebackground="red")
+                            PopUp("Can't place ship here, ship collision")
                             break
                 else:
-                    button.configure(activebackground="red")
-                    print("Can't place ship here, game map out of range")
+                    #button.configure(activebackground="red")
+                    PopUp("Can't place ship here, game map out of range")
 
             if (orientation == "h"):
                 if (y <= 600 - shipSize and x <= 600):
@@ -62,12 +63,12 @@ class Player(GamePlayer):
                             self.fieldBlocker(shipSize, x, y, orientation)
                             self.shipIsUsed()
                         else:
-                            button.configure(activebackground="red")
-                            print("Can't place ship here, ship collision")
+                            #button.configure(activebackground="red")
+                            PopUp("Can't place ship here, ship collision")
                             break
                 else:
-                    button.configure(activebackground="red")
-                    print("Can't place ship here, game map out of range")
+                    #button.configure(activebackground="red")
+                    PopUp("Can't place ship here, game map out of range")
 
     def colissionChecker(self,shipSize, x, y, orient):
         colission = False

@@ -79,7 +79,7 @@ class Game:
             #self.whereIsShip()
 
         else:
-            PopUp(150, 75, False, False, "Pickup your ships first!!")
+            PopUp("Plaece all yours ships first!!")
 
     def resetGame(self):
         Game(self.root) #chyba dziala

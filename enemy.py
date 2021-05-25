@@ -104,7 +104,7 @@ class Enemy(GamePlayer):
 
     def shot(self,button:Button):
         if(button["state"] == "disabled"): #jezeli gracz juz tu strzelal
-            print("You already shoot here")
+            PopUp("You already shoot here") #tylko tu jest taki problem ze przed rozpoczeciem gry tez to sie pojawia
             return
         x = button.winfo_x()
         y = button.winfo_y()
@@ -120,11 +120,10 @@ class Enemy(GamePlayer):
         if(not self.player.playerGoodShot): #jezeli trafie gram dalej
             self.enemyShot()
 
-        #tu sie zastanowci jak to dokladnie poumeisczac
         if (self.enemyAllShips == 0):
-            PopUp(150, 75, False, False, "Wygrana").root.grab_set_global()
+            PopUp("Wygrana").root.grab_set_global()
         if (self.player.playerAllShips == 0):
-            PopUp(150, 75, False, False, "Przegrana").root.grab_set_global()
+            PopUp("Przegrana").root.grab_set_global()
 
 
     def enemyShot(self):

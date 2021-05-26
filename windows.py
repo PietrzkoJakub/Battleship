@@ -15,9 +15,6 @@ class Display(Window):
         super().__init__(height,width,isResW,isResH)
         self.root.title(title)
 
-    def getroot(self):
-        return self.root
-
 class PopUp(Window):
     def __init__(self, mess):
         super().__init__(250,60,False,False)

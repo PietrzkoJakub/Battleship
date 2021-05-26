@@ -2,6 +2,7 @@ from gameplayer import *
 from player import *
 import random
 from windows import PopUp
+from fieldsMarking import *
 
 class Enemy(GamePlayer):
 
@@ -14,15 +15,18 @@ class Enemy(GamePlayer):
         self.oneMast = Ship(1, 4)
         self.enemyGameTable = self.gameTableInit(550)
         self.enemyAllShips = 20
-        self.enemyButtons = self.enemyButtonsCreate()
+        self.enemyButtons = self.buttonsCreate()
         self.notPlaced = True
         self.shipSize = 0
         self.alreadyShootingHere = []
         self.recursionStop = 4
         self.orient = 1
         self.randomOrientation = 0
+        self.fieldsMark = FieldsMark(self.root,650,1150,625)
+        self.fieldsMark.fieldFillWithLetters()
+        self.fieldsMark.fieldFillWithNumbers()
 
-    def enemyButtonsCreate(self):
+    def buttonsCreate(self):
         buttons = {}
         for i in range(650, 1150, 50):
             for j in range(100, 600, 50):
@@ -125,25 +129,25 @@ class Enemy(GamePlayer):
         if (self.player.playerAllShips == 0):
             PopUp("Przegrana").root.grab_set_global()
 
-
     def enemyShot(self):
         while True:  # komputer bedzie losowal miejsce do strzalu dopoki nie trafi na takie co nie strzelal
             x = random.randrange(100, 600, 50)
             y = random.randrange(100, 600, 50)
-            hardLevel = random.randint(0,5)
-            if(hardLevel < 4):
-                if(self.player.playerGameTable[(x,y)] == "X"):
+            hardLevel = random.randint(0, 5)
+            if (hardLevel < 4):
+                if (self.player.playerGameTable[(x, y)] == "X"):
                     continue
 
             if (x, y) not in self.alreadyShootingHere:
                 if self.player.playerGameTable[(x, y)] == 1:  # jezeli trafi
                     self.player.playerButtons[(x, y)].configure(bg="yellow")
                     self.player.playerAllShips -= 1
-                    self.alreadyShootingHere.append((x,y))
+                    self.alreadyShootingHere.append((x, y))
                     self.recursionStop = 4
-                    self.randomOrientation = randint(0, 1) #losowanie oreintacji w jakiej bedzie wykonywany losowy strzal
-                    self.tryShootWholeShip(x,y)
-                    #self.enemyShot() # jak przeciwnik trafi to ma kolejny strzal
+                    self.randomOrientation = randint(0,
+                                                     1)  # losowanie oreintacji w jakiej bedzie wykonywany losowy strzal
+                    self.tryShootWholeShip(x, y)
+                    # self.enemyShot() # jak przeciwnik trafi to ma kolejny strzal
 
                 else:
                     self.player.playerButtons[(x, y)].configure(bg="red")  # jezeli nie trafi
@@ -154,34 +158,36 @@ class Enemy(GamePlayer):
 
     def tryShootWholeShip(self, x, y):
         if (self.recursionStop > 0):
-            if(self.randomOrientation == 0): #poziomo
+            if (self.randomOrientation == 0):  # poziomo
                 if (x <= 500 and (x + 50, y) not in self.alreadyShootingHere):
                     self.shotRec(x + 50, y)
                 elif (x > 150 and (x - 50, y) not in self.alreadyShootingHere):
                     self.shotRec(x - 50, y)
                 else:
-                    self.enemyShot() #przeciwnik ma losowy strzal
+                    self.enemyShot()  # przeciwnik ma losowy strzal
 
 
-            elif(self.randomOrientation == 1): #pionowo
+            elif (self.randomOrientation == 1):  # pionowo
                 if (y > 150 and (x, y - 50) not in self.alreadyShootingHere):
-                     self.shotRec(x, y - 50)
+                    self.shotRec(x, y - 50)
                 elif (y <= 500 and (x, y + 50) not in self.alreadyShootingHere):
                     self.shotRec(x, y + 50)
                 else:
-                    self.enemyShot() #przeciwnik ma losowy strzal
+                    self.enemyShot()  # przeciwnik ma losowy strzal
 
-
-    def shotRec(self,x,y):
+    def shotRec(self, x, y):
         self.recursionStop -= 1
         if self.player.playerGameTable[(x, y)] == 1:  # jezeli trafi
             self.player.playerButtons[(x, y)].configure(bg="yellow")
             self.player.playerAllShips -= 1
             self.alreadyShootingHere.append((x, y))
-            self.tryShootWholeShip(x,y)
+            self.tryShootWholeShip(x, y)
         else:
             self.player.playerButtons[(x, y)].configure(bg="red")  # jezeli nie trafi
             self.alreadyShootingHere.append((x, y))
+
+
+
 
 
 

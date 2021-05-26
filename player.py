@@ -1,6 +1,8 @@
 from tkinter import *
 from gameplayer import *
 from windows import *
+from fieldsMarking import *
+
 
 class Player(GamePlayer):
     def __init__(self,root):
@@ -12,10 +14,14 @@ class Player(GamePlayer):
         self.oneMast = Ship(1, 4)
         self.playerGameTable = self.gameTableInit(0)
         self.playerAllShips = 20
-        self.playerButtons = self.playerButtonsCreate()
+        self.playerButtons = self.buttonsCreate()
         self.playerGoodShot = False
+        self.fieldsMark = FieldsMark(self.root, 100, 600, 75)
+        self.fieldsMark.fieldFillWithLetters()
+        self.fieldsMark.fieldFillWithNumbers()
 
-    def playerButtonsCreate(self):
+
+    def buttonsCreate(self):
         buttons = {}
         for i in range(100, 600, 50):
             for j in range(100, 600, 50):

@@ -7,6 +7,9 @@ class GamePlayer: #tu mozna dict compershion
         fields = {(i,j): 0 for i in range(100+pixels, 600+pixels,50) for  j in range(100, 600, 50)}
         return fields
 
+    def buttonsCreate(self):
+        pass
+
     def setShip(self):
         pass
 

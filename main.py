@@ -76,10 +76,16 @@ class Game:
         if(self.player.oneMast.quantity + self.player.twoMast.quantity+ self.player.threeMast.quantity + self.player.fourMast.quantity == 0):
             self.enemy.pleaceEnemyShipsOnMap()
             self.enemy.enableButtons()
+            self.whoShitFirst()
             #self.whereIsShip()
 
         else:
             PopUp("Plaece all yours ships first!!")
+
+    def whoShitFirst(self):
+        r = random.randint(0,1)
+        if(r==1):
+            self.enemy.enemyShot()
 
     def resetGame(self):
         Game(self.root)

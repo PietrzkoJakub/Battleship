@@ -6,16 +6,19 @@ from fieldsMarking import *
 
 class Player(GamePlayer):
     def __init__(self,root):
-        self.ship = 0
         self.root = root
+
+        self.ship = 0
         self.fourMast = Ship(4, 1)
         self.threeMast = Ship(3, 2)
         self.twoMast = Ship(2, 3)
         self.oneMast = Ship(1, 4)
+
         self.playerGameTable = self.gameTableInit(0)
         self.playerAllShips = 20
         self.playerButtons = self.buttonsCreate()
         self.playerGoodShot = False
+
         self.fieldsMark = FieldsMark(self.root, 100, 600, 75)
         self.fieldsMark.fieldFillWithLetters()
         self.fieldsMark.fieldFillWithNumbers()
@@ -35,7 +38,7 @@ class Player(GamePlayer):
 
     def setShip(self,button:Button,orientation):
         if (self.ship == 0):
-            PopUp("Pick up the ship first!").root.grab_set_global()
+            PopUp("Pick up the ship first!")
         else:
             if (not self.shipIsAvailable()):
                 return
@@ -139,5 +142,13 @@ class Player(GamePlayer):
             else:
                 return True
 
-    def playerSetShip(self,ship):
+    def playerSetShip(self, ship):
         self.ship = ship
+
+
+
+class TestPlayer: #demo test
+    def test_buttonsCreate(self):
+        root = Tk()
+        player = Player(root)
+        assert len(player.playerButtons) == 100

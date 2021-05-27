@@ -4,9 +4,10 @@ import random
 from windows import PopUp
 from fieldsMarking import *
 
+
 class Enemy(GamePlayer):
 
-    def __init__(self,root,player:Player): # to rozwianie z playerem mi sie nie podoba
+    def __init__(self, root, player: Player):  # to rozwianie z playerem mi sie nie podoba
         self.player = player
         self.root = root
         self.fourMast = Ship(4, 1)
@@ -22,15 +23,16 @@ class Enemy(GamePlayer):
         self.recursionStop = 4
         self.orient = 1
         self.randomOrientation = 0
-        self.fieldsMark = FieldsMark(self.root,650,1150,625)
+        self.fieldsMark = FieldsMark(self.root, 650, 1150, 625)
         self.fieldsMark.fieldFillWithLetters()
         self.fieldsMark.fieldFillWithNumbers()
+
 
     def buttonsCreate(self):
         buttons = {}
         for i in range(650, 1150, 50):
             for j in range(100, 600, 50):
-                button = Button(self.root, bg="yellow",state = "disabled")
+                button = Button(self.root, bg="yellow", state="disabled")
                 button.place(x=i, y=j, height=50, width=50)
                 button.bind('<Button-1>', lambda event, b=button: self.shot(b))
                 buttons[(i, j)] = button
@@ -39,22 +41,14 @@ class Enemy(GamePlayer):
     def enableButtons(self):
         for i in range(650, 1150, 50):
             for j in range(100, 600, 50):
-                self.enemyButtons[(i,j)].configure(state = "normal")
+                self.enemyButtons[(i, j)].configure(state="normal")
 
     def pleaceEnemyShipsOnMap(self):
-        self.setShip(4)
-        self.setShip(3)
-        self.setShip(3)
-        self.setShip(2)
-        self.setShip(2)
-        self.setShip(2)
-        self.setShip(1)
-        self.setShip(1)
-        self.setShip(1)
-        self.setShip(1)
+        ships = [4, 3, 3, 2, 2, 2, 1, 1, 1, 1]
+        for i in ships:
+            self.setShip(i)
 
-
-    def setShip(self, ship): #zobaczymy czy przekazanie tej zmiennej tu wystarczy
+    def setShip(self, ship):  # zobaczymy czy przekazanie tej zmiennej tu wystarczy
         self.notPlaced = True
         while self.notPlaced:
             x = random.randrange(650, 1150, 50)
@@ -105,29 +99,27 @@ class Enemy(GamePlayer):
                         if (self.enemyGameTable[(i, j)] != 1 and (i, j) in self.enemyGameTable.keys()):
                             self.enemyGameTable[(i, j)] = "X"
 
-
-    def shot(self,button:Button):
-        if(button["state"] == "disabled"): #jezeli gracz juz tu strzelal
-            PopUp("You already shoot here") #tylko tu jest taki problem ze przed rozpoczeciem gry tez to sie pojawia
+    def shot(self, button: Button):
+        if (button["state"] == "disabled"):  # jezeli gracz juz tu strzelal
+            PopUp("You already shoot here")  # tylko tu jest taki problem ze przed rozpoczeciem gry tez to sie pojawia
             return
         x = button.winfo_x()
         y = button.winfo_y()
         if self.enemyGameTable[(x, y)] == 1:
-            button.configure(bg="blue", state = "disabled")
+            button.configure(bg="blue", state="disabled")
             self.enemyAllShips -= 1
             self.player.playerGoodShot = True
         else:
-            button.configure(bg="red", state = "disabled")
+            button.configure(bg="red", state="disabled")
             self.player.playerGoodShot = False
 
-
-        if(not self.player.playerGoodShot): #jezeli trafie gram dalej
+        if (not self.player.playerGoodShot):  # jezeli trafie gram dalej
             self.enemyShot()
 
         if (self.enemyAllShips == 0):
-            PopUp("Wygrana").root.grab_set_global()
+            PopUp("You win! Restart or exit the game").root.grab_set_global()
         if (self.player.playerAllShips == 0):
-            PopUp("Przegrana").root.grab_set_global()
+            PopUp("You lose! Restart or exit the game").root.grab_set_global()
 
     def enemyShot(self):
         while True:  # komputer bedzie losowal miejsce do strzalu dopoki nie trafi na takie co nie strzelal
@@ -147,8 +139,6 @@ class Enemy(GamePlayer):
                     self.randomOrientation = randint(0,
                                                      1)  # losowanie oreintacji w jakiej bedzie wykonywany losowy strzal
                     self.tryShootWholeShip(x, y)
-                    # self.enemyShot() # jak przeciwnik trafi to ma kolejny strzal
-
                 else:
                     self.player.playerButtons[(x, y)].configure(bg="red")  # jezeli nie trafi
                     self.alreadyShootingHere.append((x, y))
@@ -177,14 +167,58 @@ class Enemy(GamePlayer):
 
     def shotRec(self, x, y):
         self.recursionStop -= 1
-        if self.player.playerGameTable[(x, y)] == 1:  # jezeli trafi
+        if self.player.playerGameTable[(x, y)] == 1:  # jezeli przeciwnik  trafi
             self.player.playerButtons[(x, y)].configure(bg="yellow")
             self.player.playerAllShips -= 1
             self.alreadyShootingHere.append((x, y))
             self.tryShootWholeShip(x, y)
         else:
-            self.player.playerButtons[(x, y)].configure(bg="red")  # jezeli nie trafi
+            self.player.playerButtons[(x, y)].configure(bg="red")  # jezeli przeciwnik nie trafi
             self.alreadyShootingHere.append((x, y))
 
 
+"""
+Skrocone rozwiaznie ale ono dziala gorzej przez ta orientacje
 
+ def enemyShot(self):
+        while True:  # komputer bedzie losowal miejsce do strzalu dopoki nie trafi na takie co nie strzelal
+            x = random.randrange(100, 600, 50)
+            y = random.randrange(100, 600, 50)
+            hardLevel = random.randint(0, 5) #algorytm utrudnienia
+            if (hardLevel < 4):
+                if (self.player.playerGameTable[(x, y)] == "X"):
+                    continue
+            if (x, y) not in self.alreadyShootingHere:
+                self.shotCheck(x, y)
+                break
+            else:
+                continue
+
+    def tryShootWholeShip(self, x, y):
+        if (self.randomOrientation == 0):  # poziomo
+            if (x <= 500 and (x + 50, y) not in self.alreadyShootingHere):
+                self.shotCheck(x + 50, y)
+            elif (x > 150 and (x - 50, y) not in self.alreadyShootingHere):
+                self.shotCheck(x - 50, y)
+            else:
+                self.enemyShot()  # przeciwnik ma losowy strzal
+        elif (self.randomOrientation == 1):  # pionowo
+            if (y > 150 and (x, y - 50) not in self.alreadyShootingHere):
+                self.shotCheck(x, y - 50)
+            elif (y <= 500 and (x, y + 50) not in self.alreadyShootingHere):
+                self.shotCheck(x, y + 50)
+            else:
+                self.enemyShot()  # przeciwnik ma losowy strzal
+
+    def shotCheck(self, x, y):
+        if self.player.playerGameTable[(x, y)] == 1:  # jezeli przeciwnik  trafi
+            self.player.playerButtons[(x, y)].configure(bg="yellow")
+            self.player.playerAllShips -= 1
+            self.alreadyShootingHere.append((x, y))
+            self.randomOrientation = randint(0, 1)
+            self.tryShootWholeShip(x, y)
+        else:
+            self.player.playerButtons[(x, y)].configure(bg="red")  # jezeli przeciwnik nie trafi
+            self.alreadyShootingHere.append((x, y))
+
+"""

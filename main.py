@@ -8,8 +8,6 @@ import random
 from ships import Ship
 
 """
-Strzelanie dziala tak ze jak ja strzele, to wykonywana jest funkcja strzelajca(komputer)
-Wiec nie ma mozliwosci losowego pierwszego strzalu
 Nie ma algorytmu ktory sprawia ze jak komputer trafi to potem losuje te najblizsze 21.05.2021 21:24 teraz jest ale trzeba go dokladniej potestowac 22.05.2021 no i nie dziala
 Na pewno ze strony gracza to dobrze dziala 22.05.2021 no nie wiem czy nie dodac funkcji ktora mu nie strzelania w inne pola niz to wokol, chyba ze wystarczy ze komputer strzela dopki nie chybi i gracz ma ta sama opcje
 Pop upy lub zabronienia niektorych rzeczy trzeba dorobic, na pewno zablokwoac uzytkownikowi  strzelac przed wcisneiciem nowej gry
@@ -18,18 +16,7 @@ Dodac metody wirtualne
 Dodac wyjatki i polaczyc je z pop upami
 No i tesy
 
-
-22.95.2021
-Jescze przegrana nie dziala jak trzeba, za wczesnie sie chyba odapala
-"""
-
-
-"""
-Wywalic gettery i settery
-"""
-
-
-"""
+""'
 Aktulizacja na 23.05.2021 
 Algorytm losujacy zostal mniej wiecej napisany ale trzeba go przenalizowac
 Wygrana i przegrana dziala tak ze trzeba kliknac jescze raz zeby sie napis wyswietlil wiec to mozna poprawic #dziala to juz poprawnie
@@ -38,6 +25,10 @@ W klasie gameplayer zostaly dodane metody wirtualne i zainicjowane w player i en
 Usunalem gettery i settery
 """
 
+"""
+Aktualizacja 27.05
+No uproscilem ten schemat losowego strzelania przez przeciwnika ale trzeba go potestowac
+"""
 
 class Game:
     def __init__(self,root):

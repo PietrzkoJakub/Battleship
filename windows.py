@@ -21,9 +21,16 @@ class PopUp(Window):
         self.label = Label(self.root, text = mess,anchor = "center")
         self.label.pack()
         self.button = Button(self.root, text="OK",command = self.closePopUp)
-        self.button.place(x=50,y=30)
+        self.button.place(x=110,y=30)
 
     def closePopUp(self):
         self.root.destroy()
+
+class InfoWindow:
+    def __init__(self,root,mess):
+        self.root = root
+        self.label = Label(self.root, text=mess)
+        self.label.place(x=600,y=0)
+
 
 

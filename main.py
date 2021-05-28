@@ -83,6 +83,7 @@ class Game:
         #Game(self.root)
         self.player = Player(self.root)
         self.enemy = Enemy(self.root, self.player)
+        self.button1["state"] = "normal"
 
     def whereIsShip(self):
         for i in range(650, 1150, 50):

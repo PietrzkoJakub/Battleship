@@ -1,2 +1,2 @@
-from tkinter import *
-from windows import *
+class YouAlreadyShootHereException(Exception):
+    pass

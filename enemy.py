@@ -26,6 +26,7 @@ class Enemy(GamePlayer):
         self.fieldsMark = FieldsMark(self.root, 650, 1150, 625)
         self.fieldsMark.fieldFillWithLetters()
         self.fieldsMark.fieldFillWithNumbers()
+        self.enemyWin = False
 
 
     def buttonsCreate(self):
@@ -117,9 +118,12 @@ class Enemy(GamePlayer):
             self.enemyShot()
 
         if (self.enemyAllShips == 0):
+            self.player.playerWin = True
             PopUp("You win! Restart or exit the game").root.grab_set_global()
         if (self.player.playerAllShips == 0):
+            self.enemyWin = True
             PopUp("You lose! Restart or exit the game").root.grab_set_global()
+
 
     def enemyShot(self):
         while True:  # komputer bedzie losowal miejsce do strzalu dopoki nie trafi na takie co nie strzelal
@@ -136,8 +140,7 @@ class Enemy(GamePlayer):
                     self.player.playerAllShips -= 1
                     self.alreadyShootingHere.append((x, y))
                     self.recursionStop = 4
-                    self.randomOrientation = randint(0,
-                                                     1)  # losowanie oreintacji w jakiej bedzie wykonywany losowy strzal
+                    self.randomOrientation = randint(0,1)  # losowanie oreintacji w jakiej bedzie wykonywany losowy strzal
                     self.tryShootWholeShip(x, y)
                 else:
                     self.player.playerButtons[(x, y)].configure(bg="red")  # jezeli nie trafi

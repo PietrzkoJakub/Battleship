@@ -13,6 +13,8 @@ class Player(GamePlayer):
         self.twoMast = Ship(2, 3)
         self.oneMast = Ship(1, 4)
 
+        self.playerWin = False
+
         self.playerGameTable = self.gameTableInit(0)
         self.playerAllShips = 20
         self.playerButtons = self.buttonsCreate()
@@ -30,19 +32,17 @@ class Player(GamePlayer):
                 button = Button(self.root, bg="green")
                 button.place(x=i, y=j, height=50, width=50)
                 buttons[(i, j)] = button
-                button.bind('<Button-1>', lambda event, b=button: self.setShip(b, "v"))
-                button.bind('<Button-3>', lambda event, b=button: self.setShip(b, "h"))
+                button.bind('<Button-1>', lambda event, b=button: self.setShip(b.winfo_x(),b.winfo_y(), "v"))
+                button.bind('<Button-3>', lambda event, b=button: self.setShip(b.winfo_x(),b.winfo_y(), "h"))
         return buttons
 
 
-    def setShip(self,button:Button,orientation):
+    def setShip(self,x,y,orientation):
         if (self.ship == 0):
             PopUp("Pick up the ship first!")
         else:
             if (not self.shipIsAvailable()):
                 return
-            x = button.winfo_x()
-            y = button.winfo_y()
             shipSize = self.ship * 50
             if (orientation == "v"):
                 if (x <= 600 - shipSize):

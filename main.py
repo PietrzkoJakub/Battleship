@@ -67,7 +67,7 @@ class Game:
         if(self.player.oneMast.quantity + self.player.twoMast.quantity+ self.player.threeMast.quantity + self.player.fourMast.quantity == 0): #to nagle przestalo dzialac
             self.enemy.pleaceEnemyShipsOnMap()
             self.enemy.enableButtons()
-            self.whoShotFirst()
+            #self.whoShotFirst()
             self.button1["state"] = "disabled" #zabezpieczenie zeby w trakcie gry nie mozna bylo wcisanc tego przycisku, dopiero po resecie
             #self.whereIsShip()
 

@@ -4,7 +4,7 @@ import unittest
 
 
 class TestGame(unittest.TestCase):
-    def test_reset(self): #test no 8 #ten nie dziala, nie wiem czy nie trzeba bedzie resetu gry naprawic
+    def test_reset(self): #test no 8 #ten nie dziala, nie wiem czy nie trzeba bedzie resetu gry naprawic, bo reset tworzzy nowy obiekt a to dziala na starym
         root = Tk()
         game = Game(root)
         game.enemy.pleaceEnemyShipsOnMap()
@@ -25,8 +25,9 @@ class TestGame(unittest.TestCase):
                 x = i[0]
                 y = i[1]
                 break
-        game.enemy.shotForTests(x,y)
-        assert game.enemy.enemyAllShips == 20
+        game.enemy.enemyButtons[(x, y)].configure(state="normal")  # jak to dziala, czyli pobieramy ten przycisk
+        game.enemy.shot(x,y)
+        self.assertEquals(game.enemy.enemyAllShips, 20)
 
     def test_player_shot_good_field(self): #test no 4 ten tez nie dziala, nie wiem czemu sie statki nie odejmuja
         x = 0
@@ -41,6 +42,6 @@ class TestGame(unittest.TestCase):
                 break
         print("Dlaczego y =",game.enemy.enemyButtons.get((700,200)).winfo_y()) #jakim prawem to nie dziala xD
         game.enemy.enemyButtons[(x,y)].configure(state = "normal") #jak to dziala, czyli pobieramy ten przycisk
-        game.enemy.shot(game.enemy.enemyButtons[(x,y)])
+        game.enemy.shot(x,y)
         self.assertEquals(game.enemy.enemyAllShips,19)
 

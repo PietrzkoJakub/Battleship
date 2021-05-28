@@ -64,10 +64,11 @@ class Game:
         sys.exit(1)
 
     def newGame(self):
-        if(self.player.oneMast.quantity + self.player.twoMast.quantity+ self.player.threeMast.quantity + self.player.fourMast.quantity == 0):
+        if(self.player.oneMast.quantity + self.player.twoMast.quantity+ self.player.threeMast.quantity + self.player.fourMast.quantity == 0): #to nagle przestalo dzialac
             self.enemy.pleaceEnemyShipsOnMap()
             self.enemy.enableButtons()
-            self.whoShitFirst()
+            self.whoShotFirst()
+            self.button1["state"] = "disabled" #zabezpieczenie zeby w trakcie gry nie mozna bylo wcisanc tego przycisku, dopiero po resecie
             #self.whereIsShip()
 
         else:
@@ -80,6 +81,7 @@ class Game:
 
     def resetGame(self):
         Game(self.root)
+
     def whereIsShip(self):
         for i in range(650, 1150, 50):
             for j in range(100, 600, 50):

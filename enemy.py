@@ -33,7 +33,7 @@ class Enemy(GamePlayer):
             for j in range(100, 600, 50):
                 button = Button(self.root, bg="yellow", state="disabled")
                 button.place(x=i, y=j, height=50, width=50)
-                button.bind('<Button-1>', lambda event, b=button: self.shot(b))
+                button.bind('<Button-1>', lambda event, b=button: self.shot(b.winfo_x(),b.winfo_y()))
                 buttons[(i, j)] = button
         return buttons
 
@@ -98,12 +98,11 @@ class Enemy(GamePlayer):
                         if (self.enemyGameTable[(i, j)] != 1 and (i, j) in self.enemyGameTable.keys()):
                             self.enemyGameTable[(i, j)] = "X"
 
-    def shot(self, button: Button):
+    def shot(self, x,y):
+        button = self.enemyButtons[(x,y)]
         if (button["state"] == "disabled"):  # jezeli gracz juz tu strzelal
             PopUp("You already shoot here")  # tylko tu jest taki problem ze przed rozpoczeciem gry tez to sie pojawia
             return
-        x = button.winfo_x()
-        y = button.winfo_y()
         if self.enemyGameTable[(x, y)] == 1:
             button.configure(bg="blue", state="disabled")
             self.enemyAllShips -= 1
@@ -174,5 +173,6 @@ class Enemy(GamePlayer):
         else:
             self.player.playerButtons[(x, y)].configure(bg="red")  # jezeli przeciwnik nie trafi
             self.alreadyShootingHere.append((x, y))
+
 
 

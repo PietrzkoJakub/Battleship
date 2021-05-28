@@ -1,2 +1,0 @@
-class YouAlreadyShootHereException(Exception):
-    pass

@@ -1,4 +1,3 @@
-from tkinter import *
 from gameplayer import *
 from windows import *
 from fieldsMarking import *
@@ -6,7 +5,6 @@ from fieldsMarking import *
 class Player(GamePlayer):
     def __init__(self,root):
         self.root = root
-
         self.ship = 0
         self.fourMast = Ship(4, 1)
         self.threeMast = Ship(3, 2)

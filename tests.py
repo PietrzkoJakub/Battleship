@@ -1,36 +1,10 @@
-from main import Game
+from game import Game
 from tkinter import *
 import unittest
-from exceptions import *
-from random import *
-
 
 class TestGame(unittest.TestCase):
 
-    def test_bad_ship_placement_sides_colission(self):  # test no 1 part 1
-        root = Tk()
-        game = Game(root)
-        game.player.ship = 4
-        game.player.setShip(100, 100, "v")
-        game.player.ship = 3
-        assert game.player.colissionChecker(150, 300, 100, "v")
-
-    def test_bad_ship_placement_tops_colission(self):  # test no 1 part 2
-        root = Tk()
-        game = Game(root)
-        game.player.ship = 4
-        game.player.setShip(100, 100, "v")
-        game.player.ship = 3
-        assert game.player.colissionChecker(150, 300, 150, "v")
-
-
-    def test_correct_placement_ships_by_player_and_starting_new_game(self): #test no 2
-        """
-        Jezeli wsyzstkie okrety gracza zostaly rozmiesczone to po wcisnieciu nowej gry wszystkie okrety przeciwnika,powinny
-        zostac rozmiesczone
-        """
-        root = Tk()
-        game = Game(root)
+    def playerAutoSetShipsForTests(self, game):
         game.player.ship = 4
         game.player.setShip(100, 100, "v")
         game.player.ship = 3
@@ -51,6 +25,20 @@ class TestGame(unittest.TestCase):
         game.player.setShip(500, 400, "v")
         game.player.ship = 1
         game.player.setShip(500, 500, "v")
+
+
+    def test_bad_ship_placement_sides_colission(self):  # test no 1
+        root = Tk()
+        game = Game(root)
+        game.player.ship = 4
+        game.player.setShip(100, 100, "v")
+        game.player.ship = 3
+        assert game.player.colissionChecker(150, 300, 100, "v") and game.player.colissionChecker(150, 300, 150, "v")
+
+    def test_correct_placement_ships_by_player_and_starting_new_game(self): #test no 2
+        root = Tk()
+        game = Game(root)
+        self.playerAutoSetShipsForTests(game)
         game.newGame()
         if 1 in game.enemy.enemyGameTable.values():
             assert True
@@ -92,26 +80,7 @@ class TestGame(unittest.TestCase):
     def test_shoot_ownship(self): #test no 5, chociaz ten test jest bez seensu ale to opisac w dokumentacji
         root = Tk()
         game = Game(root)
-        game.player.ship = 4
-        game.player.setShip(100, 100, "v")
-        game.player.ship = 3
-        game.player.setShip(100, 200, "v")
-        game.player.ship = 3
-        game.player.setShip(100, 300, "v")
-        game.player.ship = 2
-        game.player.setShip(100, 400, "v")
-        game.player.ship = 2
-        game.player.setShip(100, 500, "v")
-        game.player.ship = 2
-        game.player.setShip(500, 100, "v")
-        game.player.ship = 1
-        game.player.setShip(500, 200, "v")
-        game.player.ship = 1
-        game.player.setShip(500, 300, "v")
-        game.player.ship = 1
-        game.player.setShip(500, 400, "v")
-        game.player.ship = 1
-        game.player.setShip(500, 500, "v")
+        self.playerAutoSetShipsForTests(game)
         game.newGame()
         self.assertRaises(KeyError,lambda: game.enemy.shot(100,100))
 
@@ -155,11 +124,11 @@ class TestGame(unittest.TestCase):
     def test_reset(self): #test no 8
         root = Tk()
         game = Game(root)
-        game.enemy.pleaceEnemyShipsOnMap()
+        self.playerAutoSetShipsForTests(game)
         game.resetGame()
-        if 1 in game.enemy.enemyGameTable.values():
+        if 1 in game.player.playerGameTable.values():
                 assert False
-        if "X" in game.enemy.enemyGameTable.values():
+        if "X" in game.player.playerGameTable.values():
                 assert False
         else:
             assert True
@@ -168,51 +137,14 @@ class TestGame(unittest.TestCase):
     def test_9(self):
         root = Tk()
         game = Game(root)
-        game.player.ship = 4
-        game.player.setShip(100, 100, "v")
-        game.player.ship = 3
-        game.player.setShip(100, 200, "v")
-        game.player.ship = 3
-        game.player.setShip(100, 300, "v")
-        game.player.ship = 2
-        game.player.setShip(100, 400, "v")
-        game.player.ship = 2
-        game.player.setShip(100, 500, "v")
-        game.player.ship = 2
-        game.player.setShip(500, 100, "v")
-        game.player.ship = 1
-        game.player.setShip(500, 200, "v")
-        game.player.ship = 1
-        game.player.setShip(500, 300, "v")
-        game.player.ship = 1
-        game.player.setShip(500, 400, "v")
-        game.player.ship = 1
-        game.player.setShip(500, 500, "v")
+        self.playerAutoSetShipsForTests(game)
         game.newGame()
         game.enemy.shot(1000,200)
         game.enemy.shot(1000, 300)
         game.enemy.shot(1000, 400)
         game.resetGame()
         game.player.ship = 4
-        game.player.setShip(100, 100, "v")
-        game.player.ship = 3
-        game.player.setShip(100, 200, "v")
-        game.player.ship = 3
-        game.player.setShip(100, 300, "v")
-        game.player.ship = 2
-        game.player.setShip(100, 400, "v")
-        game.player.ship = 2
-        game.player.setShip(100, 500, "v")
-        game.player.ship = 2
-        game.player.setShip(500, 100, "v")
-        game.player.ship = 1
-        game.player.setShip(500, 200, "v")
-        game.player.ship = 1
-        game.player.setShip(500, 300, "v")
-        game.player.ship = 1
-        game.player.setShip(500, 400, "v")
-        game.player.ship = 1
-        game.player.setShip(500, 500, "v")
+        self.playerAutoSetShipsForTests(game)
         game.newGame()
         game.enemy.shot(1000, 200)
         game.enemy.shot(1000, 300)
@@ -220,29 +152,10 @@ class TestGame(unittest.TestCase):
         assert True
 
 
-    def test_winning_game(self):  # test no 10 tez jest on bez sensu wg mnie
+    def test_winning_game(self):  # test no 10
         root = Tk()
         game = Game(root)
-        game.player.ship = 4
-        game.player.setShip(100, 100, "v")
-        game.player.ship = 3
-        game.player.setShip(100, 200, "v")
-        game.player.ship = 3
-        game.player.setShip(100, 300, "v")
-        game.player.ship = 2
-        game.player.setShip(100, 400, "v")
-        game.player.ship = 2
-        game.player.setShip(100, 500, "v")
-        game.player.ship = 2
-        game.player.setShip(500, 100, "v")
-        game.player.ship = 1
-        game.player.setShip(500, 200, "v")
-        game.player.ship = 1
-        game.player.setShip(500, 300, "v")
-        game.player.ship = 1
-        game.player.setShip(500, 400, "v")
-        game.player.ship = 1
-        game.player.setShip(500, 500, "v")
+        self.playerAutoSetShipsForTests(game)
         game.newGame()
         for i, j in game.enemy.enemyGameTable.items():
             if j == 1:
@@ -250,53 +163,27 @@ class TestGame(unittest.TestCase):
         if (game.enemy.enemyAllShips == 0):
             game.player.playerWin = True
         game.resetGame()
-        game.player.oneMast.quantity = 0
-        game.player.twoMast.quantity = 0
-        game.player.threeMast.quantity = 0
-        game.player.fourMast.quantity = 0
+        self.playerAutoSetShipsForTests(game)
         game.newGame()
         if 1 in game.enemy.enemyGameTable.values():
             assert True
         else:
             assert False
 
-    def test_loosing_game(self): #test no 11 tez jest on bez sensu wg mnie
+    def test_loosing_game(self): #test no 11
         root = Tk()
         game = Game(root)
-        game.player.ship = 4
-        game.player.setShip(100, 100, "v")
-        game.player.ship = 3
-        game.player.setShip(100, 200, "v")
-        game.player.ship = 3
-        game.player.setShip(100, 300, "v")
-        game.player.ship = 2
-        game.player.setShip(100, 400, "v")
-        game.player.ship = 2
-        game.player.setShip(100, 500, "v")
-        game.player.ship = 2
-        game.player.setShip(500, 100, "v")
-        game.player.ship = 1
-        game.player.setShip(500, 200, "v")
-        game.player.ship = 1
-        game.player.setShip(500, 300, "v")
-        game.player.ship = 1
-        game.player.setShip(500, 400, "v")
-        game.player.ship = 1
-        game.player.setShip(500, 500, "v")
+        self.playerAutoSetShipsForTests(game)
         game.newGame()
-        for i, j in game.player.playerGameTable.items():
+        for i, j in game.player.playerGameTable.items(): #nie wiem czy moge tutaj tak po prostu zaiplementowac ten algorytm
             if j == 1:
                 if (i[0], [1]) not in game.enemy.alreadyShootingHere:
-                    if game.enemy.player.playerGameTable[(i[0], i[1])] == 1:  # jezeli trafi
-                        game.enemy.player.playerAllShips -= 1
-                        game.enemy.alreadyShootingHere.append((i[0], i[1]))
+                    game.enemy.player.playerAllShips -= 1
+                    game.enemy.alreadyShootingHere.append((i[0], i[1]))
         if (game.enemy.player.playerAllShips == 0):
             game.enemy.enemyWin = True
         game.resetGame()
-        game.player.oneMast.quantity = 0
-        game.player.twoMast.quantity = 0
-        game.player.threeMast.quantity = 0
-        game.player.fourMast.quantity = 0
+        self.playerAutoSetShipsForTests(game)
         game.newGame()
         if 1 in game.enemy.enemyGameTable.values():
             assert True

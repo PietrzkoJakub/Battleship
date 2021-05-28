@@ -26,11 +26,6 @@ class PopUp(Window):
     def closePopUp(self):
         self.root.destroy()
 
-class InfoWindow:
-    def __init__(self,root,mess):
-        self.root = root
-        self.label = Label(self.root, text=mess)
-        self.label.place(x=600,y=0)
 
 
 

@@ -3,6 +3,7 @@ from player import *
 import random
 from windows import PopUp
 from fieldsMarking import *
+from exceptions import *
 
 class Enemy(GamePlayer):
 
@@ -102,6 +103,7 @@ class Enemy(GamePlayer):
         button = self.enemyButtons[(x,y)]
         if (button["state"] == "disabled"):  # jezeli gracz juz tu strzelal
             PopUp("You already shoot here")  # tylko tu jest taki problem ze przed rozpoczeciem gry tez to sie pojawia
+            raise YouAlreadyShootHereException
             return
         if self.enemyGameTable[(x, y)] == 1:
             button.configure(bg="blue", state="disabled")
@@ -173,6 +175,7 @@ class Enemy(GamePlayer):
         else:
             self.player.playerButtons[(x, y)].configure(bg="red")  # jezeli przeciwnik nie trafi
             self.alreadyShootingHere.append((x, y))
+
 
 
 

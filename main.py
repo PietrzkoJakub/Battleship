@@ -80,7 +80,9 @@ class Game:
             self.enemy.enemyShot()
 
     def resetGame(self):
-        Game(self.root)
+        #Game(self.root)
+        self.player = Player(self.root)
+        self.enemy = Enemy(self.root, self.player)
 
     def whereIsShip(self):
         for i in range(650, 1150, 50):

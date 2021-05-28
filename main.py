@@ -73,7 +73,7 @@ class Game:
         else:
             PopUp("Plaece all yours ships first!!")
 
-    def whoShitFirst(self):
+    def whoShotFirst(self):
         r = random.randint(0,1)
         if(r==1):
             self.enemy.enemyShot()

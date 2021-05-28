@@ -80,19 +80,18 @@ class Game:
 
     def resetGame(self):
         Game(self.root)
-
     def whereIsShip(self):
         for i in range(650, 1150, 50):
             for j in range(100, 600, 50):
                 if self.enemy.enemyGameTable[(i, j)] == 1:
-                    self.enemy.enemyButtons[(i, j)].configure(bg="red")
+                   self.enemy.enemyButtons[(i, j)].configure(bg="red")
+
 
 
 if __name__ == '__main__':
     display = Display(1920,1080,True,True,"Baattleship")
     root = display.root
     Game(root).mainWindowInit()
-
 
 
 

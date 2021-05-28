@@ -3,7 +3,6 @@ from gameplayer import *
 from windows import *
 from fieldsMarking import *
 
-
 class Player(GamePlayer):
     def __init__(self,root):
         self.root = root
@@ -144,11 +143,3 @@ class Player(GamePlayer):
 
     def playerSetShip(self, ship):
         self.ship = ship
-
-
-
-class TestPlayer: #demo test
-    def test_buttonsCreate(self):
-        root = Tk()
-        player = Player(root)
-        assert len(player.playerButtons) == 100

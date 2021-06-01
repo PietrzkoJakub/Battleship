@@ -77,13 +77,12 @@ class TestGame(unittest.TestCase):
         self.assertEquals(game.enemy.enemyAllShips,19)
 
 
-    def test_shoot_ownship(self): #test no 5, chociaz ten test jest bez seensu ale to opisac w dokumentacji
+    def test_shoot_ownship(self): #test no 5
         root = Tk()
         game = Game(root)
         self.playerAutoSetShipsForTests(game)
         game.newGame()
-        self.assertRaises(KeyError,lambda: game.enemy.shot(100,100))
-
+        assert game.player.playerButtons[(100,200)]["state"] == "disabled"
 
 
     def test_shoot_again_with_same_empty_field(self): #test no 6
@@ -117,8 +116,7 @@ class TestGame(unittest.TestCase):
         game.enemy.enemyButtons[(x, y)].configure(state="normal")
         game.enemy.shot(x, y)
         game.enemy.shot(x, y)
-        self.assertEquals(game.enemy.enemyAllShips,19) #usuwajac wyjatki z lambdy ten test dziala logicznie poprawnie
-        #lub self.assertFalse(game.enemy.shot(x, y))
+        self.assertEquals(game.enemy.enemyAllShips,19)
 
 
     def test_reset(self): #test no 8
@@ -134,7 +132,7 @@ class TestGame(unittest.TestCase):
             assert True
 
 
-    def test_9(self):
+    def test_shot_at_the_same_fields_after_reset(self): # test no 9
         root = Tk()
         game = Game(root)
         self.playerAutoSetShipsForTests(game)
@@ -175,7 +173,7 @@ class TestGame(unittest.TestCase):
         game = Game(root)
         self.playerAutoSetShipsForTests(game)
         game.newGame()
-        for i, j in game.player.playerGameTable.items(): #nie wiem czy moge tutaj tak po prostu zaiplementowac ten algorytm
+        for i, j in game.player.playerGameTable.items():
             if j == 1:
                 if (i[0], [1]) not in game.enemy.alreadyShootingHere:
                     game.enemy.player.playerAllShips -= 1

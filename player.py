@@ -2,8 +2,9 @@ from gameplayer import *
 from windows import *
 from fieldsMarking import *
 
+
 class Player(GamePlayer):
-    def __init__(self,root):
+    def __init__(self, root):
         self.root = root
         self.ship = 0
         self.fourMast = Ship(4, 1)
@@ -22,7 +23,6 @@ class Player(GamePlayer):
         self.fieldsMark.fieldFillWithLetters()
         self.fieldsMark.fieldFillWithNumbers()
 
-
     def buttonsCreate(self):
         buttons = {}
         for i in range(100, 600, 50):
@@ -30,12 +30,11 @@ class Player(GamePlayer):
                 button = Button(self.root, bg="green")
                 button.place(x=i, y=j, height=50, width=50)
                 buttons[(i, j)] = button
-                button.bind('<Button-1>', lambda event, b=button: self.setShip(b.winfo_x(),b.winfo_y(), "v"))
-                button.bind('<Button-3>', lambda event, b=button: self.setShip(b.winfo_x(),b.winfo_y(), "h"))
+                button.bind('<Button-1>', lambda event, b=button: self.setShip(b.winfo_x(), b.winfo_y(), "v"))
+                button.bind('<Button-3>', lambda event, b=button: self.setShip(b.winfo_x(), b.winfo_y(), "h"))
         return buttons
 
-
-    def setShip(self,x,y,orientation):
+    def setShip(self, x, y, orientation):
         if (self.ship == 0):
             PopUp("Pick up the ship first!")
         else:
@@ -52,11 +51,9 @@ class Player(GamePlayer):
                             self.fieldBlocker(shipSize, x, y, orientation)
                             self.shipIsUsed()
                         else:
-                            #button.configure(activebackground="red")
                             PopUp("Can't place ship here, ship collision")
                             break
                 else:
-                    #button.configure(activebackground="red")
                     PopUp("Can't place ship here, game map out of range")
 
             if (orientation == "h"):
@@ -69,14 +66,12 @@ class Player(GamePlayer):
                             self.fieldBlocker(shipSize, x, y, orientation)
                             self.shipIsUsed()
                         else:
-                            #button.configure(activebackground="red")
                             PopUp("Can't place ship here, ship collision")
                             break
                 else:
-                    #button.configure(activebackground="red")
                     PopUp("Can't place ship here, game map out of range")
 
-    def colissionChecker(self,shipSize, x, y, orient):
+    def colissionChecker(self, shipSize, x, y, orient):
         colission = False
         if (orient == "v"):
             for i in range(0, shipSize, 50):
@@ -104,7 +99,6 @@ class Player(GamePlayer):
                         if (self.playerGameTable[(i, j)] != 1 and (i, j) in self.playerGameTable.keys()):
                             self.playerGameTable[(i, j)] = "X"
 
-
     def shipIsUsed(self):
         if (self.ship == 1):
             self.oneMast.quantity -= 1
@@ -114,8 +108,6 @@ class Player(GamePlayer):
             self.threeMast.quantity -= 1
         elif (self.ship == 4):
             self.fourMast.quantity -= 1
-
-
 
     def shipIsAvailable(self):
         if (self.ship == 1):
@@ -141,3 +133,7 @@ class Player(GamePlayer):
 
     def playerSetShip(self, ship):
         self.ship = ship
+
+    def buttonBlocker(self):
+        for i in self.playerButtons.values():
+            i["state"] = "disabled"

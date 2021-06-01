@@ -39,6 +39,7 @@ class Game:
             self.enemy.enableButtons()
             self.whoShotFirst()
             self.button1["state"] = "disabled"  # zabezpieczenie zeby w trakcie gry nie mozna bylo wcisanc tego przycisku, dopiero po resecie
+            self.player.buttonBlocker()
         else:
             PopUp("Plaece all yours ships first!!")
 

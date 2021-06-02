@@ -49,7 +49,7 @@ class Game:
         Przyciski gracza zostaja dezaktywowane, w celu zablokowania mozliwosci strzelania we wlasne pola.
         """
         if (self.player.oneMast.quantity + self.player.twoMast.quantity + self.player.threeMast.quantity + self.player.fourMast.quantity == 0):
-            self.enemy.pleaceEnemyShipsOnMap()
+            self.enemy.placeEnemyShipsOnMap()
             self.enemy.enableButtons()
             self.whoShotFirst()
             self.button1["state"] = "disabled"

@@ -50,7 +50,7 @@ class TestGame(unittest.TestCase):
     def test_player_shot_empty_field(self): #test no 3
         root = Tk()
         game = Game(root)
-        game.enemy.pleaceEnemyShipsOnMap()
+        game.enemy.placeEnemyShipsOnMap()
         x= 0
         y = 0
         for i,j in game.enemy.enemyGameTable.items():
@@ -67,7 +67,7 @@ class TestGame(unittest.TestCase):
         y = 0
         root = Tk()
         game = Game(root)
-        game.enemy.pleaceEnemyShipsOnMap()
+        game.enemy.placeEnemyShipsOnMap()
         for i,j in game.enemy.enemyGameTable.items():
             if(j==1):
                 x = int(i[0])
@@ -91,7 +91,7 @@ class TestGame(unittest.TestCase):
         y = 0
         root = Tk()
         game = Game(root)
-        game.enemy.pleaceEnemyShipsOnMap()
+        game.enemy.placeEnemyShipsOnMap()
         for i, j in game.enemy.enemyGameTable.items():
             if (j == 0):
                 x = int(i[0])
@@ -108,7 +108,7 @@ class TestGame(unittest.TestCase):
         y = 0
         root = Tk()
         game = Game(root)
-        game.enemy.pleaceEnemyShipsOnMap()
+        game.enemy.placeEnemyShipsOnMap()
         for i, j in game.enemy.enemyGameTable.items():
             if (j == 1):
                 x = int(i[0])

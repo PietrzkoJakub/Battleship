@@ -19,7 +19,6 @@ class Enemy(GamePlayer):
         self.notPlaced = True
         self.shipSize = 0
         self.alreadyShootingHere = []
-        self.recursionStop = 4
         self.orient = 1
         self.randomOrientation = 0
         self.enemyWin = False
@@ -51,7 +50,7 @@ class Enemy(GamePlayer):
             for j in range(100, 600, 50):
                 self.enemyButtons[(i, j)].configure(state="normal")
 
-    def pleaceEnemyShipsOnMap(self):
+    def placeEnemyShipsOnMap(self):
         """
         Metoda wykonujaca metode setShip na kazdym ze statkow.
         """
@@ -92,17 +91,17 @@ class Enemy(GamePlayer):
         Jezeli na polach, na ktorych ma byc umiesczony statek, w tablicy gry znajduje sie "X" lub 1
         nie bedzie to mozliwe i funkcja zwroci True
         """
-        colission = False
+        collision = False
         if (o == 0):
             for i in range(0, self.shipSize, 50):
                 if (self.enemyGameTable[(x + i, y)] != 0):
-                    colission = True
-            return colission
+                    collision = True
+            return collision
         else:
             for i in range(0, self.shipSize, 50):
                 if (self.enemyGameTable[(x, y + i)] != 0):
-                    colission = True
-            return colission
+                    collision = True
+            return collision
 
     def fieldBlocker(self, x, y, o):
         """

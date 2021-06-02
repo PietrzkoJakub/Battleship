@@ -83,17 +83,17 @@ class Player(GamePlayer):
         Jezeli na polach, na ktorych ma byc umiesczony statek, w tablicy gry znajduje sie "X" lub 1
         nie bedzie to mozliwe i funkcja zwroci True
         """
-        colission = False
+        collision = False
         if (orient == "v"):
             for i in range(0, shipSize, 50):
                 if (self.playerGameTable[(x + i, y)] != 0):
-                    colission = True
-            return colission
+                    collision = True
+            return collision
         elif (orient == "h"):
             for i in range(0, shipSize, 50):
                 if (self.playerGameTable[(x, y + i)] != 0):
-                    colission = True
-            return colission
+                    collision = True
+            return collision
 
     def fieldBlocker(self, shipSize, x, y, o):
         """

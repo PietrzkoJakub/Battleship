@@ -5,23 +5,17 @@ from fieldsMarking import *
 
 class Player(GamePlayer):
     def __init__(self, root):
-        self.root = root #glowne okno gry przekazywane w celu poprawnego wysiwetlenia przyciskow
-        self.ship = 0 #pole "mowiace" metodzie setShip jaki okret jest obecnie umiesczany
-
-        #odpowienie okrety
+        self.root = root
+        self.ship = 0
         self.fourMast = Ship(4, 1)
         self.threeMast = Ship(3, 2)
         self.twoMast = Ship(2, 3)
         self.oneMast = Ship(1, 4)
-
-        self.playerWin = False #pole przechowujace informacje o wygranej
-
-        self.playerGameTable = self.gameTableInit(0) #inicjalizacja tablicy gry
-        self.playerAllShips = 20 #liczba wszystkich pol z okreatmi gracza, jezeli pole zostanie trafione przez przeciwnika, zmniejsza sie o 1
-        self.playerButtons = self.buttonsCreate() #inicjalizacja slownika przyciskow
-        self.playerGoodShot = False #pole informujace o trafienu przez gracza w statek przeciwnika
-
-        #oznaczanie pol gracza cyframi i literami
+        self.playerWin = False
+        self.playerGameTable = self.gameTableInit(0)
+        self.playerAllShips = 20
+        self.playerButtons = self.buttonsCreate()
+        self.playerGoodShot = False
         self.fieldsMark = FieldsMark(self.root, 100, 600, 75)
         self.fieldsMark.fieldFillWithLetters()
         self.fieldsMark.fieldFillWithNumbers()
@@ -105,7 +99,7 @@ class Player(GamePlayer):
         """
         Jezeli dany okret zostanie umiesczany na planszy, to pola wokol niego w tablicy gry zostaja
         ustawione na wartosc "X", aby nie bylo mozliwe umiesczenie okretu, ktory bedzie sie stykal z wlasnie
-        umiesczonym bokami lub rogami
+        umiesczonym, bokami lub rogami
         """
         if (o == "v"):
             for i in range(x - 50, x + shipSize + 50, 50):  # poziomo

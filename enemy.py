@@ -22,13 +22,18 @@ class Enemy(GamePlayer):
         self.recursionStop = 4
         self.orient = 1
         self.randomOrientation = 0
+        self.enemyWin = False
         self.fieldsMark = FieldsMark(self.root, 650, 1150, 625)
         self.fieldsMark.fieldFillWithLetters()
         self.fieldsMark.fieldFillWithNumbers()
-        self.enemyWin = False
 
 
     def buttonsCreate(self):
+        """
+        Nadpisana metoda wirtualna z klasy GamePlayer sluzoca do stworzenia slownika, przyciskow i umiesczenia ich na mapie.
+        Kluczem w slowniku sa wspolrzedne x,y danego przycisku, a wartoscia dany przycisk.
+        Do kazdego przycisku jest przypisana metoda shot.
+        """
         buttons = {}
         for i in range(650, 1150, 50):
             for j in range(100, 600, 50):
@@ -39,23 +44,32 @@ class Enemy(GamePlayer):
         return buttons
 
     def enableButtons(self):
+        """
+        Metoda sluzaca do aktywacji przyciskow przeciwnika po wcisnieciu nowej gry.
+        """
         for i in range(650, 1150, 50):
             for j in range(100, 600, 50):
                 self.enemyButtons[(i, j)].configure(state="normal")
 
     def pleaceEnemyShipsOnMap(self):
+        """
+        Metoda wykonujaca metode setShip na kazdym ze statkow.
+        """
         ships = [4, 3, 3, 2, 2, 2, 1, 1, 1, 1]
         for i in ships:
             self.setShip(i)
 
     def setShip(self, ship):
+        """
+        Metoda sluzaca do umiesczenia statku na mapie, z wykorzystaniem nizej umiesczonych metod klasy
+        """
         self.notPlaced = True
         while self.notPlaced:
             x = random.randrange(650, 1150, 50)
             y = random.randrange(100, 550, 50)
             o = random.randint(0, 1)
             self.shipSize = ship * 50
-            if (o == 0):  # poziomo
+            if (o == 0):
                 if (x <= 1150 - self.shipSize):
                     col = self.colissionChecker(x, y, o)
                     for i in range(0, self.shipSize, 50):
@@ -73,6 +87,11 @@ class Enemy(GamePlayer):
                             self.notPlaced = False
 
     def colissionChecker(self, x, y, o):
+        """
+        Przed umiesczeniem kazdego statku na planszy, tablica gry jest sprawdzana.
+        Jezeli na polach, na ktorych ma byc umiesczony statek, w tablicy gry znajduje sie "X" lub 1
+        nie bedzie to mozliwe i funkcja zwroci True
+        """
         colission = False
         if (o == 0):
             for i in range(0, self.shipSize, 50):
@@ -86,6 +105,11 @@ class Enemy(GamePlayer):
             return colission
 
     def fieldBlocker(self, x, y, o):
+        """
+        Jezeli dany okret zostanie umiesczany na planszy, to pola wokol niego w tablicy gry zostaja
+        ustawione na wartosc "X", aby nie bylo mozliwe umiesczenie okretu, ktory bedzie sie stykal z wlasnie
+        umiesczonym, bokami lub rogami
+        """
         if (o == 0):
             for i in range(x - 50, x + self.shipSize + 50, 50):  # poziomo
                 for j in range(y - 50, y + 100, 50):
@@ -100,8 +124,16 @@ class Enemy(GamePlayer):
                             self.enemyGameTable[(i, j)] = "X"
 
     def shot(self, x,y):
+        """
+        Metoda odpowiadajaca za strzal gracza. Przypisana jest ona do kazdego z przyciskow z planszy przeciwnika.
+        Jezeli gracz kliknie w dane pole na planszy przeciwnika, sprawdzana jest odpowiadajaca mu wartosc w tablicy gry
+        przeciwnika. Jezeli gracz trafi przycisk przeciwnika zmienia kolor na niebieski i liczba wszystkich statkow
+        przeciwnika zmniejsza sie o jeden. W przeciwnym razie liczba statkow przeciwnika nie zmienia sie, a przycisk zmienia kolor
+        na czerwony. Po oddaniu strzalu przez gracza wywolywana jest metoda enemyShot odpowiadajaca za strzal przeciwnika (opisana
+        ponizej). Strzaly oddawane sa naprzemiennie do momentu zestrzelenia wszystkich statkow przez ktoras ze stron.
+        """
         button = self.enemyButtons[(x,y)]
-        if (button["state"] == "disabled"):  # jezeli gracz juz tu strzelal
+        if (button["state"] == "disabled"):  # blokada mozliwosci strzalu przez gracza w to samo pole
             PopUp("You already shoot here")
             return False
         if self.enemyGameTable[(x, y)] == 1:
@@ -112,7 +144,7 @@ class Enemy(GamePlayer):
             button.configure(bg="red", state="disabled")
             self.player.playerGoodShot = False
 
-        if (not self.player.playerGoodShot):  # jezeli trafie gram dalej
+        if (not self.player.playerGoodShot):  # jezeli gracz trafi ma kolejny strzal
             self.enemyShot()
 
         if (self.enemyAllShips == 0):
@@ -124,7 +156,10 @@ class Enemy(GamePlayer):
 
 
     def enemyShot(self):
-        while True:  # komputer bedzie losowal miejsce do strzalu dopoki nie trafi na takie co nie strzelal
+        """
+        Metoda odpowiedzialna za oddanie strzalu przez przeciwnika.
+        """
+        while True:  # komputer bedzie losowal miejsce do strzalu dopoki nie trafi na takie, w ktore jescze nie strzelal
             x = random.randrange(100, 600, 50)
             y = random.randrange(100, 600, 50)
             hardLevel = random.randint(0, 10)
@@ -142,6 +177,12 @@ class Enemy(GamePlayer):
                 continue
 
     def tryShootWholeShip(self, x, y):
+        """
+        Metoda wywolywana, kiedy przeciwnik trafi w pole gracza.
+        Zaleznie od wczesniej wylosowanej orientacji wykonywany jest odpowiedni strzal,
+        w sasiaduje z wczesniej trafionym pole. Jezeli nie ma takiej mozliowsci przeciwnik wykonuje losowy
+        strzal.
+        """
         if (self.randomOrientation == 0):  # poziomo
             if (x <= 500 and (x + 50, y) not in self.alreadyShootingHere):
                 self.shotRec(x + 50, y)
@@ -167,11 +208,23 @@ class Enemy(GamePlayer):
 
 
     def wellAimedShot(self,x,y):
+        """
+        Metoda wywolywana, kiedy przeciwnik trafi w pole ze statkiem.
+        Przycisk, w ktory przeciwnik strzelil zmienia kolor na niebieski.
+        Liczba wszystkich statkow gracza zostaje zmniejszona o 1.
+        Wspolrzedne przycisku zostaja dodane do listy pol, do ktorych juz strzelano.
+        Przeciwnik probuje odgadnac orientacje statku i zestrzelic caly okret.
+        """
         self.player.playerButtons[(x, y)].configure(bg="yellow")
         self.player.playerAllShips -= 1
         self.alreadyShootingHere.append((x, y))
         self.tryShootWholeShip(x, y)
 
     def badAimedShot(self,x,y):
+        """
+        Metoda wywolywana, kiedy przeciwnik trafi w puste pole.
+        Przycisk, w ktory przeciwnik strzelil zmienia kolor na czerwony.
+        Wspolrzedne przycisku zostaja dodane do listy pol, do ktorych juz strzelano.
+        """
         self.player.playerButtons[(x, y)].configure(bg="red")
         self.alreadyShootingHere.append((x, y))

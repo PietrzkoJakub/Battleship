@@ -1,6 +1,9 @@
 from tkinter import *
 
 class FieldsMark:
+    """
+    Oznaczenie plansz gracza i przeciwnika, poziomo literami, pionowo liczbami.
+    """
     def __init__(self,root,xStart,xEnd,xCord):
         self.root = root
         self.alphabet = [chr(i) for i in range(ord('A'),ord('J')+1)]

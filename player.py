@@ -5,25 +5,34 @@ from fieldsMarking import *
 
 class Player(GamePlayer):
     def __init__(self, root):
-        self.root = root
-        self.ship = 0
+        self.root = root #glowne okno gry przekazywane w celu poprawnego wysiwetlenia przyciskow
+        self.ship = 0 #pole "mowiace" metodzie setShip jaki okret jest obecnie umiesczany
+
+        #odpowienie okrety
         self.fourMast = Ship(4, 1)
         self.threeMast = Ship(3, 2)
         self.twoMast = Ship(2, 3)
         self.oneMast = Ship(1, 4)
 
-        self.playerWin = False
+        self.playerWin = False #pole przechowujace informacje o wygranej
 
-        self.playerGameTable = self.gameTableInit(0)
-        self.playerAllShips = 20
-        self.playerButtons = self.buttonsCreate()
-        self.playerGoodShot = False
+        self.playerGameTable = self.gameTableInit(0) #inicjalizacja tablicy gry
+        self.playerAllShips = 20 #liczba wszystkich pol z okreatmi gracza, jezeli pole zostanie trafione przez przeciwnika, zmniejsza sie o 1
+        self.playerButtons = self.buttonsCreate() #inicjalizacja slownika przyciskow
+        self.playerGoodShot = False #pole informujace o trafienu przez gracza w statek przeciwnika
 
+        #oznaczanie pol gracza cyframi i literami
         self.fieldsMark = FieldsMark(self.root, 100, 600, 75)
         self.fieldsMark.fieldFillWithLetters()
         self.fieldsMark.fieldFillWithNumbers()
 
     def buttonsCreate(self):
+        """
+        Nadpisana metoda wirtualna z klasy GamePlayer sluzoca do stworzenia slownika, przyciskow i umiesczenia ich na mapie.
+        Kluczem w slowniku sa wspolrzedne x,y danego przycisku, a wartoscia dany przycisk.
+        Do kazdego przycisku jest przypisana metoda setShip pozwalajaca na ustawienie statku, horyzontalnie (klikniecie lewego
+        myszy) lub wertykalnie (klikniecie prawego przycisku myszy)
+        """
         buttons = {}
         for i in range(100, 600, 50):
             for j in range(100, 600, 50):
@@ -35,6 +44,9 @@ class Player(GamePlayer):
         return buttons
 
     def setShip(self, x, y, orientation):
+        """
+        Metoda sluzaca do umiesczenia statku na mapie, z wykorzystaniem nizej umiesczonych metod klasy
+        """
         if (self.ship == 0):
             PopUp("Pick up the ship first!")
         else:
@@ -72,6 +84,11 @@ class Player(GamePlayer):
                     PopUp("Can't place ship here, game map out of range")
 
     def colissionChecker(self, shipSize, x, y, orient):
+        """
+        Przed umiesczeniem kazdego statku na planszy, tablica gry jest sprawdzana.
+        Jezeli na polach, na ktorych ma byc umiesczony statek, w tablicy gry znajduje sie "X" lub 1
+        nie bedzie to mozliwe i funkcja zwroci True
+        """
         colission = False
         if (orient == "v"):
             for i in range(0, shipSize, 50):
@@ -85,6 +102,11 @@ class Player(GamePlayer):
             return colission
 
     def fieldBlocker(self, shipSize, x, y, o):
+        """
+        Jezeli dany okret zostanie umiesczany na planszy, to pola wokol niego w tablicy gry zostaja
+        ustawione na wartosc "X", aby nie bylo mozliwe umiesczenie okretu, ktory bedzie sie stykal z wlasnie
+        umiesczonym bokami lub rogami
+        """
         if (o == "v"):
             for i in range(x - 50, x + shipSize + 50, 50):  # poziomo
                 for j in range(y - 50, y + 100, 50):
@@ -100,6 +122,9 @@ class Player(GamePlayer):
                             self.playerGameTable[(i, j)] = "X"
 
     def shipIsUsed(self):
+        """
+        Jezeli dany typ statku zostanie umiesczony na planszy to jego dostepna ilosc, zmniejsza sie o 1.
+        """
         if (self.ship == 1):
             self.oneMast.quantity -= 1
         elif (self.ship == 2):
@@ -110,6 +135,11 @@ class Player(GamePlayer):
             self.fourMast.quantity -= 1
 
     def shipIsAvailable(self):
+        """
+        Kazdy statek ma ograniczona ilosc, np czteromasztowiec wystepuje w ilosci 1.
+        Jezeli wszystkie statki danego typu zostaly juz rozmiesczone, metoda ta blokuje ich
+        dalsze rozmiesczanie.
+        """
         if (self.ship == 1):
             if (self.oneMast.quantity == 0):
                 return False
@@ -132,8 +162,18 @@ class Player(GamePlayer):
                 return True
 
     def playerSetShip(self, ship):
+        """
+        Metoda sluzoaca do ustawienia pola ship, na odpowieni liczbe 1-4, ktora odpowiada kazdemy ze statkow.
+        Jest ona przypisana do przyciskow, z konkretnymi statkami do rozmiesczenia w klasie Game.
+        Dzieki temu po klikniecu w odpowiedni statek, pole ship jest ustawiana na odpowiednia wartosc i metoda
+        setShip wie, o ktory statek chodzi
+        """
         self.ship = ship
 
     def buttonBlocker(self):
+        """
+        Metoda sluzaca do blokowania przyciskow, jest ona wywolywana, po wcisniecu nowej gry, zapobiega ona
+        oddaniu strzalu przez gracza w swoej wlasne pole
+        """
         for i in self.playerButtons.values():
             i["state"] = "disabled"

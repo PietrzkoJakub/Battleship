@@ -71,7 +71,7 @@ class Enemy(GamePlayer):
             self.shipSize = ship * 50
             if (o == 0):
                 if (x <= 1150 - self.shipSize):
-                    col = self.colissionChecker(x, y, o)
+                    col = self.collisionChecker(x, y, o)
                     for i in range(0, self.shipSize, 50):
                         if (not col):
                             self.enemyGameTable[(x + i, y)] = 1
@@ -79,14 +79,14 @@ class Enemy(GamePlayer):
                             self.notPlaced = False
             else:
                 if (y <= 600 - self.shipSize and x <= 1150):
-                    col = self.colissionChecker(x, y, o)
+                    col = self.collisionChecker(x, y, o)
                     for i in range(0, self.shipSize, 50):
                         if (not col):
                             self.enemyGameTable[(x, y + i)] = 1
                             self.fieldBlocker(x, y, o)
                             self.notPlaced = False
 
-    def colissionChecker(self, x, y, o):
+    def collisionChecker(self, x, y, o):
         """
         Przed umiesczeniem kazdego statku na planszy, tablica gry jest sprawdzana.
         Jezeli na polach, na ktorych ma byc umiesczony statek, w tablicy gry znajduje sie "X" lub 1

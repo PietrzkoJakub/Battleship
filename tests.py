@@ -27,13 +27,14 @@ class TestGame(unittest.TestCase):
         game.player.setShip(500, 500, "v")
 
 
-    def test_bad_ship_placement_sides_colission(self):  # test no 1
+    def test_bad_ship_placement(self):  # test no 1
         root = Tk()
         game = Game(root)
         game.player.ship = 4
         game.player.setShip(100, 100, "v")
         game.player.ship = 3
-        assert game.player.colissionChecker(150, 300, 100, "v") and game.player.colissionChecker(150, 300, 150, "v")
+        assert game.player.collisionChecker(150, 300, 100, "v") and game.player.collisionChecker(150, 300, 150, "v")
+
 
     def test_correct_placement_ships_by_player_and_starting_new_game(self): #test no 2
         root = Tk()
@@ -141,7 +142,6 @@ class TestGame(unittest.TestCase):
         game.enemy.shot(1000, 300)
         game.enemy.shot(1000, 400)
         game.resetGame()
-        game.player.ship = 4
         self.playerAutoSetShipsForTests(game)
         game.newGame()
         game.enemy.shot(1000, 200)
@@ -158,8 +158,6 @@ class TestGame(unittest.TestCase):
         for i, j in game.enemy.enemyGameTable.items():
             if j == 1:
                 game.enemy.shot(i[0], i[1])
-        if (game.enemy.enemyAllShips == 0):
-            game.player.playerWin = True
         game.resetGame()
         self.playerAutoSetShipsForTests(game)
         game.newGame()
@@ -178,8 +176,6 @@ class TestGame(unittest.TestCase):
                 if (i[0], [1]) not in game.enemy.alreadyShootingHere:
                     game.enemy.player.playerAllShips -= 1
                     game.enemy.alreadyShootingHere.append((i[0], i[1]))
-        if (game.enemy.player.playerAllShips == 0):
-            game.enemy.enemyWin = True
         game.resetGame()
         self.playerAutoSetShipsForTests(game)
         game.newGame()

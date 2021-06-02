@@ -22,7 +22,7 @@ class GamePlayer:
     def setShip(self):
         pass
 
-    def colissionChecker(self):
+    def collisionChecker(self):
         pass
 
     def fieldBlocker(self):

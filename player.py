@@ -49,7 +49,7 @@ class Player(GamePlayer):
             shipSize = self.ship * 50
             if (orientation == "v"):
                 if (x <= 600 - shipSize):
-                    col = self.colissionChecker(shipSize, x, y, orientation)
+                    col = self.collisionChecker(shipSize, x, y, orientation)
                     for i in range(0, shipSize, 50):
                         if (not col):
                             self.playerButtons[(x + i, y)].configure(bg="blue")
@@ -64,7 +64,7 @@ class Player(GamePlayer):
 
             if (orientation == "h"):
                 if (y <= 600 - shipSize and x <= 600):
-                    col = self.colissionChecker(shipSize, x, y, orientation)
+                    col = self.collisionChecker(shipSize, x, y, orientation)
                     for i in range(0, shipSize, 50):
                         if (not col):
                             self.playerButtons[(x, y + i)].configure(bg="blue")
@@ -77,7 +77,7 @@ class Player(GamePlayer):
                 else:
                     PopUp("Can't place ship here, game map out of range")
 
-    def colissionChecker(self, shipSize, x, y, orient):
+    def collisionChecker(self, shipSize, x, y, orient):
         """
         Przed umiesczeniem kazdego statku na planszy, tablica gry jest sprawdzana.
         Jezeli na polach, na ktorych ma byc umiesczony statek, w tablicy gry znajduje sie "X" lub 1

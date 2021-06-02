@@ -3,10 +3,11 @@ import random
 
 class Game:
     def __init__(self, root):
-        self.root = root
-        self.player = Player(self.root)
-        self.enemy = Enemy(self.root, self.player)
+        self.root = root #przekazanie glownego okna gry
+        self.player = Player(self.root) #inicjalizacja obiektu Player
+        self.enemy = Enemy(self.root, self.player) #inicjalizacja obiektu Enemy
 
+        #inicjalizcja glownych przyciskow
         self.button1 = Button(self.root, text="New Game", command=self.newGame)
         self.button1.place(x=0, y=0, height=25, width=80)
         self.button2 = Button(self.root, text="Reset Game", command=self.resetGame)
@@ -14,6 +15,7 @@ class Game:
         self.button3 = Button(self.root, text="Exit", command=self.exit)
         self.button3.place(x=0, y=50, height=25, width=80)
 
+        #inicjalizacja przyciskow sluzacych do wyboru odpowiedniego okretu przez gracza
         self.fourmast = Button(self.root, text="FOURMAST", bg="purple")
         self.fourmast.place(x=1200, y=200, height=50, width=200)
         self.fourmast.bind('<Button-1>', lambda event, b=self.fourmast: self.player.playerSetShip(4))
@@ -31,24 +33,44 @@ class Game:
         self.root.mainloop()
 
     def exit(self):
+        """
+        Metoda przypisana do przycisku Exit, konczaca dzialanie calego programu.
+        """
         sys.exit(1)
 
     def newGame(self):
+        """
+        Metoda przypisana do przycisku New Game. Odpowiada za rozpoczecie nowej gry.
+        Rozpoczecie nowej gry jest mozliwe tylko i wylacznie po rozmiesczeniu wszystkich okretow przez gracza.
+        Jezeli wszystkie okrety zostaly rozmiesczone przez gracza, statki przeciwnika sa umiesczane w spoosob losowy na planszy.
+        Przyciski przeciwnika zostaje aktywowane.
+        Nastepuje losowanie, kto oddaje pierwszy strzal.
+        Przycisk nowej gry zostaje dezaktywowany. Nie ma mozlowsci wcisniecia go w trakcie rozgrywki.
+        Przyciski gracza zostaja dezaktywowane, w celu zablokowania mozliwosci strzelania we wlasne pola.
+        """
         if (self.player.oneMast.quantity + self.player.twoMast.quantity + self.player.threeMast.quantity + self.player.fourMast.quantity == 0):
             self.enemy.pleaceEnemyShipsOnMap()
             self.enemy.enableButtons()
             self.whoShotFirst()
-            self.button1["state"] = "disabled"  # zabezpieczenie zeby w trakcie gry nie mozna bylo wcisanc tego przycisku, dopiero po resecie
+            self.button1["state"] = "disabled"
             self.player.buttonBlocker()
         else:
             PopUp("Plaece all yours ships first!!")
 
     def resetGame(self):
+        """
+        Metoda przypisana do przycisku Reset Game.
+        Inicjalizuje ona ponownie obiekt klasy Player oraz Enemy.
+        Przycisk nowej gry staje sie ponownie aktywny.
+        """
         self.player = Player(self.root)
         self.enemy = Enemy(self.root, self.player)
         self.button1["state"] = "normal"
 
     def whoShotFirst(self):
+        """
+        Metoda sluzaca do wylosowania, kto oddaje strzal jako pierwszy, gracz czy przeciwnik.
+        """
         r = random.randint(0, 1)
         if (r == 1):
             self.enemy.enemyShot()

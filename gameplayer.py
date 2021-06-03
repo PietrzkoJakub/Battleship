@@ -11,7 +11,7 @@ class GamePlayer:
         0 - puste pole
         1- pole ze statkiem
         X - puste pole, blokujace mozliwosc wystapienia kolizji
-        Po uruchomieniu programu, kazdy przycisk jest inicjowana wartoscia 0.
+        Po uruchomieniu programu, kazdy przycisk jest domyslnie inicjowany wartoscia 0.
         """
         fields = {(i,j): 0 for i in range(100+pixels, 600+pixels,50) for  j in range(100, 600, 50)}
         return fields

@@ -24,7 +24,7 @@ class Player(GamePlayer):
         """
         Nadpisana metoda wirtualna z klasy GamePlayer sluzoca do stworzenia slownika, przyciskow i umiesczenia ich na mapie.
         Kluczem w slowniku sa wspolrzedne x,y danego przycisku, a wartoscia dany przycisk.
-        Do kazdego przycisku jest przypisana metoda setShip pozwalajaca na ustawienie statku, horyzontalnie (klikniecie lewego
+        Do kazdego przycisku jest przypisana metoda setShip pozwalajaca na ustawienie statku, horyzontalnie (klikniecie lewego przycisku
         myszy) lub wertykalnie (klikniecie prawego przycisku myszy)
         """
         buttons = {}
@@ -81,7 +81,7 @@ class Player(GamePlayer):
         """
         Przed umiesczeniem kazdego statku na planszy, tablica gry jest sprawdzana.
         Jezeli na polach, na ktorych ma byc umiesczony statek, w tablicy gry znajduje sie "X" lub 1
-        nie bedzie to mozliwe i funkcja zwroci True
+        nie bedzie to mozliwe i metoda zwroci True
         """
         collision = False
         if (orient == "v"):
@@ -98,7 +98,7 @@ class Player(GamePlayer):
     def fieldBlocker(self, shipSize, x, y, o):
         """
         Jezeli dany okret zostanie umiesczany na planszy, to pola wokol niego w tablicy gry zostaja
-        ustawione na wartosc "X", aby nie bylo mozliwe umiesczenie okretu, ktory bedzie sie stykal z wlasnie
+        ustawione na wartosc "X", aby nie bylo mozliwe umiesczenie okretu, ktory bedzie sie stykal z obecnie
         umiesczonym, bokami lub rogami
         """
         if (o == "v"):
@@ -160,14 +160,14 @@ class Player(GamePlayer):
         Metoda sluzoaca do ustawienia pola ship, na odpowieni liczbe 1-4, ktora odpowiada kazdemy ze statkow.
         Jest ona przypisana do przyciskow, z konkretnymi statkami do rozmiesczenia w klasie Game.
         Dzieki temu po klikniecu w odpowiedni statek, pole ship jest ustawiana na odpowiednia wartosc i metoda
-        setShip wie, o ktory statek chodzi
+        setShip wie, o ktory statek chodzi.
         """
         self.ship = ship
 
     def buttonBlocker(self):
         """
         Metoda sluzaca do blokowania przyciskow, jest ona wywolywana, po wcisniecu nowej gry, zapobiega ona
-        oddaniu strzalu przez gracza w swoej wlasne pole
+        oddaniu strzalu przez gracza w swoej wlasne pole.
         """
         for i in self.playerButtons.values():
             i["state"] = "disabled"

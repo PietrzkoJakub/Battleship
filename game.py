@@ -43,10 +43,10 @@ class Game:
         Metoda przypisana do przycisku New Game. Odpowiada za rozpoczecie nowej gry.
         Rozpoczecie nowej gry jest mozliwe tylko i wylacznie po rozmiesczeniu wszystkich okretow przez gracza.
         Jezeli wszystkie okrety zostaly rozmiesczone przez gracza, statki przeciwnika sa umiesczane w spoosob losowy na planszy.
-        Przyciski przeciwnika zostaje aktywowane.
+        Przyciski przeciwnika zostaja aktywowane.
         Nastepuje losowanie, kto oddaje pierwszy strzal.
         Przycisk nowej gry zostaje dezaktywowany. Nie ma mozlowsci wcisniecia go w trakcie rozgrywki.
-        Przyciski gracza zostaja dezaktywowane, w celu zablokowania mozliwosci strzelania we wlasne pola.
+        Przyciski gracza zostaja dezaktywowane, w celu zablokowania graczowi mozliwosci strzelania we wlasne pola.
         """
         if (self.player.oneMast.quantity + self.player.twoMast.quantity + self.player.threeMast.quantity + self.player.fourMast.quantity == 0):
             self.enemy.placeEnemyShipsOnMap()
@@ -74,9 +74,3 @@ class Game:
         r = random.randint(0, 1)
         if (r == 1):
             self.enemy.enemyShot()
-
-    def whereIsShip(self):
-        for i in range(650, 1150, 50):
-            for j in range(100, 600, 50):
-                if self.enemy.enemyGameTable[(i, j)] == 1:
-                    self.enemy.enemyButtons[(i, j)].configure(bg="red")

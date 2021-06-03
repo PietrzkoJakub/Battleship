@@ -29,9 +29,9 @@ class Enemy(GamePlayer):
 
     def buttonsCreate(self):
         """
-        Nadpisana metoda wirtualna z klasy GamePlayer sluzoca do stworzenia slownika, przyciskow i umiesczenia ich na mapie.
+        Nadpisana metoda wirtualna z klasy GamePlayer sluzoca do stworzenia slownika przyciskow i umiesczenia ich na planszy gry.
         Kluczem w slowniku sa wspolrzedne x,y danego przycisku, a wartoscia dany przycisk.
-        Do kazdego przycisku jest przypisana metoda shot.
+        Do kazdego przycisku przypisywana jest metoda shot.
         """
         buttons = {}
         for i in range(650, 1150, 50):
@@ -89,7 +89,7 @@ class Enemy(GamePlayer):
         """
         Przed umiesczeniem kazdego statku na planszy, tablica gry jest sprawdzana.
         Jezeli na polach, na ktorych ma byc umiesczony statek, w tablicy gry znajduje sie "X" lub 1
-        nie bedzie to mozliwe i funkcja zwroci True
+        nie bedzie to mozliwe i metoda zwroci True.
         """
         collision = False
         if (o == 0):
@@ -106,7 +106,7 @@ class Enemy(GamePlayer):
     def fieldBlocker(self, x, y, o):
         """
         Jezeli dany okret zostanie umiesczany na planszy, to pola wokol niego w tablicy gry zostaja
-        ustawione na wartosc "X", aby nie bylo mozliwe umiesczenie okretu, ktory bedzie sie stykal z wlasnie
+        ustawione na wartosc "X", aby nie bylo mozliwe umiesczenie okretu, ktory bedzie sie stykal z obecnie
         umiesczonym, bokami lub rogami
         """
         if (o == 0):
@@ -126,8 +126,9 @@ class Enemy(GamePlayer):
         """
         Metoda odpowiadajaca za strzal gracza. Przypisana jest ona do kazdego z przyciskow z planszy przeciwnika.
         Jezeli gracz kliknie w dane pole na planszy przeciwnika, sprawdzana jest odpowiadajaca mu wartosc w tablicy gry
-        przeciwnika. Jezeli gracz trafi przycisk przeciwnika zmienia kolor na niebieski i liczba wszystkich statkow
-        przeciwnika zmniejsza sie o jeden. W przeciwnym razie liczba statkow przeciwnika nie zmienia sie, a przycisk zmienia kolor
+        przeciwnika. Jezeli gracz trafi w okret przeciwnika, przycisk przypisany do danego okretu
+        zmienia kolor na niebieski i liczba wszystkich statkow przeciwnika zmniejsza sie o jeden.
+        W przeciwnym razie liczba statkow przeciwnika nie zmienia sie, a przycisk zmienia kolor
         na czerwony. Po oddaniu strzalu przez gracza wywolywana jest metoda enemyShot odpowiadajaca za strzal przeciwnika (opisana
         ponizej). Strzaly oddawane sa naprzemiennie do momentu zestrzelenia wszystkich statkow przez ktoras ze stron.
         """
@@ -158,11 +159,11 @@ class Enemy(GamePlayer):
         """
         Metoda odpowiedzialna za oddanie strzalu przez przeciwnika.
         """
-        while True:  # komputer bedzie losowal miejsce do strzalu dopoki nie trafi na takie, w ktore jescze nie strzelal
+        while True:  # komputer bedzie losowal miejsce strzalu dopoki nie trafi na takie, w ktore jescze nie strzelal
             x = random.randrange(100, 600, 50)
             y = random.randrange(100, 600, 50)
             hardLevel = random.randint(0, 10)
-            if (hardLevel < 9):
+            if (hardLevel < 9): #80% szans ze przeciwnik ominie pole na ktorym nie moze byc statku, prosty algorytm zwiekszenia trudnosci gry
                 if (self.player.playerGameTable[(x, y)] == "X"):
                     continue
             if (x, y) not in self.alreadyShootingHere:
@@ -179,7 +180,7 @@ class Enemy(GamePlayer):
         """
         Metoda wywolywana, kiedy przeciwnik trafi w pole gracza.
         Zaleznie od wczesniej wylosowanej orientacji wykonywany jest odpowiedni strzal,
-        w sasiaduje z wczesniej trafionym pole. Jezeli nie ma takiej mozliowsci przeciwnik wykonuje losowy
+        w sasiadujace, z wczesniej trafionym pole. Jezeli nie ma takiej mozliowsci przeciwnik wykonuje losowy
         strzal.
         """
         if (self.randomOrientation == 0):  # poziomo
@@ -200,6 +201,9 @@ class Enemy(GamePlayer):
 
 
     def shotRec(self, x, y):
+        """
+        Metoda wywolywana do oddania kolejnych strzalow przy probie zestrzelenia okretu gracza do konca.
+        """
         if self.player.playerGameTable[(x, y)] == 1:  # jezeli przeciwnik  trafi
             self.wellAimedShot(x,y)
         else:

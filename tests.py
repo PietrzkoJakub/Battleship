@@ -50,7 +50,8 @@ class TestGame(unittest.TestCase):
     def test_player_shot_empty_field(self): #test no 3
         root = Tk()
         game = Game(root)
-        game.enemy.placeEnemyShipsOnMap()
+        self.playerAutoSetShipsForTests(game)
+        game.newGame()
         x= 0
         y = 0
         for i,j in game.enemy.enemyGameTable.items():
@@ -58,7 +59,6 @@ class TestGame(unittest.TestCase):
                 x = i[0]
                 y = i[1]
                 break
-        game.enemy.enemyButtons[(x, y)].configure(state="normal")
         game.enemy.shot(x,y)
         self.assertEquals(game.enemy.enemyAllShips, 20)
 
@@ -67,13 +67,13 @@ class TestGame(unittest.TestCase):
         y = 0
         root = Tk()
         game = Game(root)
-        game.enemy.placeEnemyShipsOnMap()
+        self.playerAutoSetShipsForTests(game)
+        game.newGame()
         for i,j in game.enemy.enemyGameTable.items():
             if(j==1):
                 x = int(i[0])
                 y = int(i[1])
                 break
-        game.enemy.enemyButtons[(x,y)].configure(state = "normal")
         game.enemy.shot(x,y)
         self.assertEquals(game.enemy.enemyAllShips,19)
 
@@ -91,13 +91,13 @@ class TestGame(unittest.TestCase):
         y = 0
         root = Tk()
         game = Game(root)
-        game.enemy.placeEnemyShipsOnMap()
+        self.playerAutoSetShipsForTests(game)
+        game.newGame()
         for i, j in game.enemy.enemyGameTable.items():
             if (j == 0):
                 x = int(i[0])
                 y = int(i[1])
                 break
-        game.enemy.enemyButtons[(x, y)].configure(state="normal")
         game.enemy.shot(x, y)
         self.assertFalse(game.enemy.shot(x, y))
 
@@ -108,13 +108,13 @@ class TestGame(unittest.TestCase):
         y = 0
         root = Tk()
         game = Game(root)
-        game.enemy.placeEnemyShipsOnMap()
+        self.playerAutoSetShipsForTests(game)
+        game.newGame()
         for i, j in game.enemy.enemyGameTable.items():
             if (j == 1):
                 x = int(i[0])
                 y = int(i[1])
                 break
-        game.enemy.enemyButtons[(x, y)].configure(state="normal")
         game.enemy.shot(x, y)
         game.enemy.shot(x, y)
         self.assertEquals(game.enemy.enemyAllShips,19)
